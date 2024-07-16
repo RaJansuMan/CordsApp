@@ -34,6 +34,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.AbsoluteAlignment
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.painterResource
@@ -57,9 +58,13 @@ fun LocateScreen() {
 
     Box(modifier = Modifier.fillMaxSize()) {
         MapBoxMap(point = null)
-        ExpandableSearchView( modifier = Modifier.align(Alignment.TopEnd).height(48.dp),  searchDisplay = "",
-            onSearchDisplayChanged = {},
-            onSearchDisplayClosed = {})
+      ExpandedSearchView(
+                modifier = Modifier.height(48.dp)
+                    .padding(end=8.dp, top = 8.dp).align(Alignment.TopEnd).alpha(0.9F),
+                searchDisplay = "",
+                onSearchDisplayChanged = {},
+                onSearchDisplayClosed = {}
+            )
         CustomBottomSheet(
             modifier = Modifier.align(Alignment.BottomCenter),
             sheetState = sheetState,

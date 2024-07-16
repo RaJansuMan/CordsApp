@@ -2,6 +2,9 @@
 <project version="4">
   <component name="deploymentTargetDropDown">
     <value>
+      <entry key="CollapsedSearchViewPreview">
+        <State />
+      </entry>
       <entry key="CustomDarkModePreview">
         <State />
       </entry>
@@ -9,9 +12,6 @@
         <State />
       </entry>
       <entry key="ExpandedSearchViewPreview">
-        <State />
-      </entry>
-      <entry key="LightModePreview">
         <State />
       </entry>
       <entry key="LightModePreview (1)">

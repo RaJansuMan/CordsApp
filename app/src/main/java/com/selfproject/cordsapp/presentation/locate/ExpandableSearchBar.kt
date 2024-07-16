@@ -1,10 +1,13 @@
 package com.selfproject.cordsapp.presentation.locate
 
-import androidx.compose.animation.Crossfade
+import androidx.compose.animation.core.Animatable
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -15,10 +18,8 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -28,8 +29,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.TextRange
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
@@ -38,44 +41,7 @@ import com.selfproject.cordsapp.ui.theme.CordsAppTheme
 
 
 @Composable
-fun ExpandableSearchView(
-    searchDisplay: String,
-    onSearchDisplayChanged: (String) -> Unit,
-    onSearchDisplayClosed: () -> Unit,
-    modifier: Modifier = Modifier,
-    expandedInitially: Boolean = false,
-    tint: Color = Color.White,
-    backgroundColor:Color = Color.Gray,
-) {
-    val (expanded, onExpandedChanged) = remember {
-        mutableStateOf(expandedInitially)
-    }
-
-
-    Crossfade(targetState = expanded, label = "", modifier =modifier) { isSearchFieldVisible ->
-        when (isSearchFieldVisible) {
-            true -> ExpandedSearchView(
-                searchDisplay = searchDisplay,
-                onSearchDisplayChanged = onSearchDisplayChanged,
-                onSearchDisplayClosed = onSearchDisplayClosed,
-                onExpandedChanged = onExpandedChanged,
-                modifier = modifier.background(color = Color.Gray),
-                tint = tint,
-                backgroundColor = backgroundColor
-            )
-
-            false -> CollapsedSearchView(
-                onExpandedChanged = onExpandedChanged,
-                modifier = modifier,
-                tint = tint,
-                backgroundColor = backgroundColor
-            )
-        }
-    }
-}
-
-@Composable
-fun SearchIcon(iconTint:Color= MaterialTheme.colorScheme.onSurfaceVariant) {
+fun SearchIcon(iconTint: Color = MaterialTheme.colorScheme.onSurfaceVariant) {
     Icon(
         Icons.Filled.Search,
         contentDescription = "search icon",
@@ -83,89 +49,111 @@ fun SearchIcon(iconTint:Color= MaterialTheme.colorScheme.onSurfaceVariant) {
     )
 }
 
-@Composable
-fun CollapsedSearchView(
-    onExpandedChanged: (Boolean) -> Unit,
-    modifier: Modifier = Modifier,
-    tint: Color,
-    backgroundColor:Color
-) {
 
-    Row(
-        modifier = modifier
-            .background(color =backgroundColor)
-    ) {
-        IconButton(onClick = { onExpandedChanged(true) }) {
-            SearchIcon(iconTint = tint)
-        }
-    }
-}
 
 @Composable
 fun ExpandedSearchView(
+    modifier: Modifier = Modifier,
     searchDisplay: String,
     onSearchDisplayChanged: (String) -> Unit,
     onSearchDisplayClosed: () -> Unit,
-    onExpandedChanged: (Boolean) -> Unit,
-    modifier: Modifier = Modifier,
-    tint: Color,
-    backgroundColor:Color
+    initialState: BarState = BarState.COLLAPSED,
+    tint: Color = Color.White,
+    backgroundColor: Color = Color.Gray
 ) {
+    val collapsedWidth = with(LocalDensity.current) { 48.dp.toPx() }
+    val expandedWidth = with(LocalDensity.current) { 300.dp.toPx() }
+
+    var barState by remember {
+        mutableStateOf(initialState)
+    }
+    val barWidth by remember {
+        mutableStateOf(Animatable(collapsedWidth))
+    }
+    val textFieldFocusRequester = remember { FocusRequester() }
     val focusManager = LocalFocusManager.current
 
-    val textFieldFocusRequester = remember { FocusRequester() }
+    LaunchedEffect(barState) {
+        when (barState) {
+            BarState.EXPANDED -> {
+                textFieldFocusRequester.requestFocus()
+                barWidth.animateTo(expandedWidth)
 
-    SideEffect {
-        textFieldFocusRequester.requestFocus()
+            }
+
+            BarState.COLLAPSED -> {
+                focusManager.clearFocus(true)
+                barWidth.animateTo(collapsedWidth)
+
+            }
+        }
     }
 
     var textFieldValue by remember {
         mutableStateOf(TextFieldValue(searchDisplay, TextRange(searchDisplay.length)))
     }
-
     Row(
-        modifier = modifier.background(color = backgroundColor),
+        modifier = modifier
+            .background(color = backgroundColor)
+            .width(with(LocalDensity.current) { barWidth.value.toDp() }),
         horizontalArrangement = Arrangement.Start,
         verticalAlignment = Alignment.CenterVertically
     ) {
+        IconButton(onClick = {
+            if (barState == BarState.EXPANDED) {
 
-        TextField(
+            } else {
+                barState = BarState.EXPANDED
+            }
+        }) {
+            SearchIcon(iconTint = tint)
+        }
+        BasicTextField(
             value = textFieldValue,
             onValueChange = {
                 textFieldValue = it
                 onSearchDisplayChanged(it.text)
             },
-            leadingIcon = {
-                SearchIcon(iconTint = tint)
-            },
             modifier = Modifier
                 .focusRequester(textFieldFocusRequester)
-                .background(color = Color.Gray),
-            colors = TextFieldDefaults.colors(focusedContainerColor = backgroundColor, unfocusedContainerColor = backgroundColor),
-            label = {
-                Text(text = "Search", color = tint)
-            },
+                .background(color = backgroundColor)
+                .padding(4.dp)
+                .width(210.dp), // Optional: add padding inside the text field
+            textStyle = TextStyle(color = tint),
             keyboardOptions = KeyboardOptions(
                 imeAction = ImeAction.Done
             ),
             keyboardActions = KeyboardActions(
                 onDone = {
-                    focusManager.clearFocus()
+                    barState = BarState.COLLAPSED
                 }
-            )
+            ),
+            decorationBox = { innerTextField ->
+                if (textFieldValue.text.isEmpty()) {
+                    Text(
+                        text = "Search",
+                        color = tint.copy(alpha = 0.5f)
+                    )
+                }
+                innerTextField() // Draw the actual text field content
+            }
         )
-
-
         IconButton(onClick = {
-            onExpandedChanged(false)
+            barState = BarState.COLLAPSED
             onSearchDisplayClosed()
         }) {
             Icon(
                 Icons.Filled.ArrowForward,
-                contentDescription = "Locate", tint = tint
+                contentDescription = "Locate", tint = tint,
+
             )
         }
     }
+}
+
+enum class BarState {
+    EXPANDED,
+    COLLAPSED
 }
 
 @Preview
@@ -175,30 +163,12 @@ fun CollapsedSearchViewPreview() {
         Surface(
             color = MaterialTheme.colorScheme.surface
         ) {
-            ExpandableSearchView(
+            ExpandedSearchView(
                 modifier = Modifier.height(48.dp),
                 searchDisplay = "",
                 onSearchDisplayChanged = {},
-                onSearchDisplayClosed = {}
-            )
-        }
-    }
-}
-
-@Preview
-@Composable
-fun ExpandedSearchViewPreview() {
-    CordsAppTheme {
-        Surface(
-            color = MaterialTheme.colorScheme.surface
-        ) {
-            ExpandableSearchView(
-                modifier = Modifier.height(48.dp),
-
-                searchDisplay = "",
-                onSearchDisplayChanged = {},
-                expandedInitially = true,
-                onSearchDisplayClosed = {}
+                onSearchDisplayClosed = {},
+                initialState= BarState.EXPANDED
             )
         }
     }
