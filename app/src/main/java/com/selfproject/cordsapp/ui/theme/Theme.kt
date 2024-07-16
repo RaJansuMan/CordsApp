@@ -1,29 +1,39 @@
 package com.selfproject.cordsapp.ui.theme
 
 import android.app.Activity
-import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.dynamicDarkColorScheme
-import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.graphics.toArgb
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
+
+
+/*
+* surface is for bottom card view and top bar as well as background of search bar
+*
+* onSurfaceVariant for most of the thing on surface
+*
+* onSurface for selected things on surface distinguishing from surface variant
+*
+* */
 
 private val DarkColorScheme = darkColorScheme(
     primary = lightBlue,
     secondary = white,
     tertiary = Pink80,
 
-    surface= lightBlack,
+    surface = lightBlack,
 
     onSurface = darkBlue,
-    onSurfaceVariant = white
+    onSurfaceVariant = white,
+
+    primaryContainer = darkBlack,
+    onPrimaryContainer = white,
+    onPrimary = white
 
 )
 
@@ -32,8 +42,13 @@ private val LightColorScheme = lightColorScheme(
     secondary = PurpleGrey80,
     tertiary = Pink80,
 
-    surface= veryLightBlue,
-    onSurfaceVariant = grayShade
+    surface = veryLightBlue,
+    onSurfaceVariant = grayShade,
+
+
+    primaryContainer = white,
+    onPrimaryContainer = darkBlue,
+    onPrimary = white
 
     /* Other default colors to override
     background = Color(0xFFFFFBFE),

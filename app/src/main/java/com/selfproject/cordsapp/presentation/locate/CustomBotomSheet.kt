@@ -4,8 +4,6 @@ import androidx.compose.animation.core.Animatable
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -41,7 +39,7 @@ fun CustomBottomSheet(
     halfExpandedHeight: Dp,
     minHeight: Dp,
     onSheetStateChanged: (BottomSheetState) -> Unit,
-    sheetContent: @Composable ColumnScope.() -> Unit
+    sheetContent: @Composable () -> Unit
 ) {
     var _sheetState by remember { mutableStateOf(BottomSheetState.COLLAPSED) }
     val scope = rememberCoroutineScope()
@@ -65,57 +63,47 @@ fun CustomBottomSheet(
         }
         _sheetState = sheetState
     }
-    Box(modifier = modifier.fillMaxSize()) {
-        Card(
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .height(with(LocalDensity.current) { sheetHeight.value.toDp() })
-                .fillMaxWidth()
-                .padding(16.dp)
-                .pointerInput(Unit) {
-                    detectDragGestures(
-                        onDragStart = {},
-                        onDragEnd = {
-                            scope.launch {
-                                if (sheetHeight.value > halfHeightPx && sheetHeight.value < fullHeightPx) {
-                                    if (_sheetState == BottomSheetState.COLLAPSED)
-                                        onSheetStateChanged(BottomSheetState.EXPANDED)
-                                    else
-                                        onSheetStateChanged(BottomSheetState.COLLAPSED)
-                                }
-                                if (sheetHeight.value < halfHeightPx) {
-                                    if (_sheetState == BottomSheetState.COLLAPSED)
-                                        onSheetStateChanged(BottomSheetState.HIDDEN)
-                                    else
-                                        onSheetStateChanged(BottomSheetState.COLLAPSED)
-                                }
-                            }
-                        },
-                        onDragCancel = {}
-                    ) { change, dragAmount ->
-                        change.consume()
+    Card(
+        modifier = modifier
+            .height(with(LocalDensity.current) { sheetHeight.value.toDp() })
+            .fillMaxWidth()
+            .pointerInput(Unit) {
+                detectDragGestures(
+                    onDragStart = {},
+                    onDragEnd = {
                         scope.launch {
-                            val targetValue = sheetHeight.value - dragAmount.y
-                            if (targetValue > minHeightPx && targetValue < fullHeightPx) {
-                                sheetHeight.snapTo(targetValue)
+                            if (sheetHeight.value > halfHeightPx && sheetHeight.value < fullHeightPx) {
+                                if (_sheetState == BottomSheetState.COLLAPSED)
+                                    onSheetStateChanged(BottomSheetState.EXPANDED)
+                                else
+                                    onSheetStateChanged(BottomSheetState.COLLAPSED)
                             }
-
+                            if (sheetHeight.value < halfHeightPx) {
+                                if (_sheetState == BottomSheetState.COLLAPSED)
+                                    onSheetStateChanged(BottomSheetState.HIDDEN)
+                                else
+                                    onSheetStateChanged(BottomSheetState.COLLAPSED)
+                            }
                         }
+                    },
+                    onDragCancel = {}
+                ) { change, dragAmount ->
+                    change.consume()
+                    scope.launch {
+                        val targetValue = sheetHeight.value - dragAmount.y
+                        if (targetValue > minHeightPx && targetValue < fullHeightPx) {
+                            sheetHeight.snapTo(targetValue)
+                        }
+
                     }
                 }
-                .background(color = Color.Transparent),
-            colors = CardDefaults.cardColors(containerColor = Color.Transparent),
-            elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
-            shape = RoundedCornerShape(0.dp)
-        ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(16.dp)
-            ) {
-                sheetContent()
             }
-        }
+            .background(color = Color.Transparent),
+        colors = CardDefaults.cardColors(containerColor = Color.Transparent),
+        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
+        shape = RoundedCornerShape(0.dp)
+    ) {
+        sheetContent()
     }
 }
 
