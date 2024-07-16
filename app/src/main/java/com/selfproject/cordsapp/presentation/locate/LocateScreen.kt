@@ -10,7 +10,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.FloatingActionButton
@@ -54,13 +56,16 @@ fun LocateScreen() {
         sheetState = newState
     }
     val topHeight = 60.dp
-    val halfExpandedHeight = 150.dp
+    val halfExpandedHeight = 135.dp
 
     Box(modifier = Modifier.fillMaxSize()) {
-        MapBoxMap(point = null)
+//        MapBoxMap(point = null)
       ExpandedSearchView(
-                modifier = Modifier.height(48.dp)
-                    .padding(end=8.dp, top = 8.dp).align(Alignment.TopEnd).alpha(0.9F),
+                modifier = Modifier
+                    .height(48.dp)
+                    .padding(end = 8.dp, top = 8.dp)
+                    .align(Alignment.TopEnd)
+                    .alpha(0.9F),
                 searchDisplay = "",
                 onSearchDisplayChanged = {},
                 onSearchDisplayClosed = {}
@@ -96,17 +101,23 @@ fun TopSheet(modifier: Modifier = Modifier) {
             .background(color = Color.Transparent),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        IconButton(modifier = Modifier
-            .height(30.dp)
-            .width(30.dp)
-            .padding(0.dp)
-            .background(shape = RectangleShape, color = MaterialTheme.colorScheme.surface)
-            .align(Alignment.Bottom),
-            onClick = { /*TODO*/ }) {
-            Icon(
-                painter = painterResource(id = R.drawable.baseline_gps_fixed_24),
-                contentDescription = "Locate", tint =  MaterialTheme.colorScheme.onSurfaceVariant
-            )
+        Box(modifier = Modifier.padding(bottom = 2.dp).align(Alignment.Bottom)) {
+            IconButton(modifier = Modifier
+                .background(
+                    shape = RoundedCornerShape(corner = CornerSize(10.dp)),
+                    color = MaterialTheme.colorScheme.surface
+                )
+                .align(Alignment.BottomCenter)
+                .padding(0.dp)
+                .size(35.dp)
+             ,
+                onClick = { /*TODO*/ }) {
+                Icon(
+                    painter = painterResource(id = R.drawable.baseline_gps_fixed_24),
+                    contentDescription = "Locate", tint = MaterialTheme.colorScheme.onSurfaceVariant ,
+                    modifier = Modifier.padding(0.dp).size(18.dp)
+                )
+            }
         }
 
         FloatingActionButton(
@@ -119,7 +130,8 @@ fun TopSheet(modifier: Modifier = Modifier) {
             Icon(
                 Icons.Filled.Add,
                 contentDescription = "Add",
-                tint = MaterialTheme.colorScheme.onPrimaryContainer
+                tint = MaterialTheme.colorScheme.onSurfaceVariant,
+
             )
         }
     }
@@ -130,9 +142,9 @@ fun TopHeaderCard(modifier: Modifier=Modifier) {
     Card(
         modifier = modifier
             .fillMaxWidth()
-            .padding(8.dp),
+            ,
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-        shape = RoundedCornerShape(8.dp),
+        shape = RoundedCornerShape(topEnd = 8.dp, topStart = 8.dp, bottomEnd = 0.dp, bottomStart = 0.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
@@ -177,6 +189,21 @@ fun TopHeaderCard(modifier: Modifier=Modifier) {
     }
     
 }
+ @Composable
+ fun BottomCard(modifier: Modifier=Modifier) {
+     Card(
+         modifier = modifier
+             .fillMaxWidth(),
+         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+         shape = RoundedCornerShape(
+             topEnd = 8.dp,
+             topStart = 8.dp,
+             bottomEnd = 0.dp,
+             bottomStart = 0.dp
+         ),
+         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
+     ) {}
+ }
 
 @Preview(showBackground = true)
 @Composable
