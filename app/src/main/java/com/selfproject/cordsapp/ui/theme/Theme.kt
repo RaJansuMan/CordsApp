@@ -26,14 +26,19 @@ private val DarkColorScheme = darkColorScheme(
     secondary = white,
     tertiary = Pink80,
 
-    surface = lightBlack,
+    surface = lightBlack,  // for darkbackground
 
     onSurface = darkBlue,
-    onSurfaceVariant = white,
+    onSurfaceVariant = white,  // for on surface normal
 
     primaryContainer = darkBlack,
     onPrimaryContainer = white,
-    onPrimary = white
+    onPrimary = white,
+
+
+    background = grayShade // for light background
+
+    
 
 )
 
@@ -48,8 +53,9 @@ private val LightColorScheme = lightColorScheme(
 
     primaryContainer = white,
     onPrimaryContainer = darkBlue,
-    onPrimary = white
+    onPrimary = white,
 
+    background = white
     /* Other default colors to override
     background = Color(0xFFFFFBFE),
     surface = Color(0xFFFFFBFE),
