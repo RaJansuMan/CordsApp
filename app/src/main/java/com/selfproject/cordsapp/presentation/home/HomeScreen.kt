@@ -14,13 +14,11 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.selfproject.cordsapp.presentation.navigation.Route
 import com.selfproject.cordsapp.presentation.navigation.TabNavGraph
-import com.selfproject.cordsapp.ui.theme.CordsAppTheme
 import com.selfproject.cordsapp.ui.theme.lightBlack
 import com.selfproject.cordsapp.ui.theme.white
 
@@ -28,15 +26,15 @@ import com.selfproject.cordsapp.ui.theme.white
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
-    navController: NavController? = null,
+    navController: NavController,
     darkTheme: Boolean = isSystemInDarkTheme()
 ) {
     val tabTitles = listOf("Locate", "Archive")
     val coroutineScope = rememberCoroutineScope()
     val pagerState = rememberPagerState(pageCount = { tabTitles.count() })
     val unselectedColor = if (darkTheme) white else lightBlack
-    val navController = rememberNavController()
-    val backStackState = navController.currentBackStackEntryAsState().value
+    val tabNavController = rememberNavController()
+    val backStackState = tabNavController.currentBackStackEntryAsState().value
     var selectedItem by rememberSaveable {
         mutableIntStateOf(0)
     }
@@ -57,12 +55,12 @@ fun HomeScreen(
                     onClick = {
                         when (index) {
                             0 -> navigateToTab(
-                                navController = navController,
+                                navController = tabNavController,
                                 route = Route.LocateScreen.route
                             )
 
                             1 -> navigateToTab(
-                                navController = navController,
+                                navController = tabNavController,
                                 route = Route.ArchiveScreen.route
                             )
                         }
@@ -72,7 +70,7 @@ fun HomeScreen(
                 )
             }
         }
-        TabNavGraph(navController = navController)
+        TabNavGraph(tabNavController = tabNavController, homeNavController = navController)
     }
 }
 
@@ -89,18 +87,18 @@ private fun navigateToTab(navController: NavController, route: String) {
 }
 
 
-@Preview(showBackground = true)
-@Composable
-fun LightModePreview() {
-    CordsAppTheme(darkTheme = false) {
-        HomeScreen()
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun DarkModePreview() {
-    CordsAppTheme(darkTheme = true) {
-        HomeScreen(darkTheme = true)
-    }
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun LightModePreview() {
+//    CordsAppTheme(darkTheme = false) {
+//        HomeScreen()
+//    }
+//}
+//
+//@Preview(showBackground = true)
+//@Composable
+//fun DarkModePreview() {
+//    CordsAppTheme(darkTheme = true) {
+//        HomeScreen(darkTheme = true)
+//    }
+//}

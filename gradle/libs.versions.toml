@@ -1,27 +1,27 @@
 [versions]
-agp = "8.3.0"
+agp = "8.3.2"
 kotlin = "1.9.0"
 coreKtx = "1.13.1"
 junit = "4.13.2"
-junitVersion = "1.1.5"
-espressoCore = "3.5.1"
-lifecycleRuntimeKtx = "2.8.2"
-activityCompose = "1.8.2"
-composeBom = "2023.08.00"
-swipeRefreshVersion="0.24.2-alpha"
-hiltVersion="2.44"
-hiltViewModelVersion="1.0.0-alpha03"
-hiltComposeVersion="1.0.0"
-ksp="1.9.0-1.0.13"
+junitVersion = "1.2.1"
+espressoCore = "3.6.1"
+lifecycleRuntimeKtx = "2.8.3"
+activityCompose = "1.9.0"
+composeBom = "2024.06.00"
+swipeRefreshVersion = "0.24.2-alpha"
+hiltVersion = "2.50"
+hiltViewModelVersion = "1.0.0-alpha03"
+hiltComposeVersion = "1.2.0"
+ksp = "1.9.0-1.0.13"
 roomCompiler = "2.6.1"
-retrofitVersion="2.9.0"
-okhttp3Version="4.10.0"
+retrofitVersion = "2.9.0"
+okhttp3Version = "4.11.0"
 #coilVersion="2.6.0"
-navComposeVersion="2.1.0-alpha04"
-openCSVVersion="5.5.2"
+navComposeVersion = "2.1.0-alpha04"
+openCSVVersion = "5.5.2"
 
-mapboxVersion="11.4.1"
-gmsMapVersion = "18.1.0"
+mapboxVersion = "11.4.1"
+gmsMapVersion = "19.0.0"
 
 gmsVersion = "4.3.5"
 mapPlatformVersion = "2.0.1"
@@ -40,40 +40,39 @@ androidx-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
 androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
 androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
-androidx-material = {group = "androidx.compose.material",name = "material"}
+androidx-material = { group = "androidx.compose.material", name = "material" }
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
-google-accompanist-swiperefresh={group="com.google.accompanist",name="accompanist-swiperefresh",version.ref="swipeRefreshVersion"}
-google-accompanist-insets={group="com.google.accompanist",name="accompanist-insets",version.ref="swipeRefreshVersion"}
-google-accompanist-navigation-animation={group="com.google.accompanist",name="accompanist-navigation-animation",version.ref="swipeRefreshVersion"}
+google-accompanist-swiperefresh = { group = "com.google.accompanist", name = "accompanist-swiperefresh", version.ref = "swipeRefreshVersion" }
+google-accompanist-insets = { group = "com.google.accompanist", name = "accompanist-insets", version.ref = "swipeRefreshVersion" }
+google-accompanist-navigation-animation = { group = "com.google.accompanist", name = "accompanist-navigation-animation", version.ref = "swipeRefreshVersion" }
 
 
-google-hilt={group="com.google.dagger",name = "hilt-android",version.ref="hiltVersion"}
-google-hilt-compiler={group="com.google.dagger",name = "hilt-android-compiler",version.ref="hiltVersion"}
+google-hilt = { group = "com.google.dagger", name = "hilt-android", version.ref = "hiltVersion" }
+google-hilt-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hiltVersion" }
 #androidx-hilt-viewmodel={group="androidx.hilt",name ="hilt-lifecycle-viewmodel",version.ref="hiltViewModelVersion"}
-androidx-hilt-compiler={group="androidx.hilt",name= "hilt-compiler",version.ref="hiltComposeVersion"}
-androidx-hilt-compose={group="androidx.hilt",name="hilt-navigation-compose",version.ref="hiltComposeVersion"}
-androidx-room-ktx={group="androidx.room",name="room-ktx",version.ref="roomCompiler"}
-androidx-room-runtime={group="androidx.room", name="room-runtime", version.ref="roomCompiler"}
+androidx-hilt-compiler = { group = "androidx.hilt", name = "hilt-compiler", version.ref = "hiltComposeVersion" }
+androidx-hilt-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "hiltComposeVersion" }
+androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "roomCompiler" }
+androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "roomCompiler" }
 androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "roomCompiler" }
-squareup-retrofit2-retrofit={ group="com.squareup.retrofit2", name="retrofit",version.ref="retrofitVersion"}
-squareup-retrofit2-moshiConverter={ group="com.squareup.retrofit2", name="converter-moshi",version.ref="retrofitVersion"}
-squareup-http3={group="com.squareup.okhttp3",name="okhttp",version.ref="okhttp3Version"}
-squareup-http3-interceptor={group="com.squareup.okhttp3",name="logging-interceptor",version.ref="okhttp3Version"}
+squareup-retrofit2-retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofitVersion" }
+squareup-retrofit2-moshiConverter = { group = "com.squareup.retrofit2", name = "converter-moshi", version.ref = "retrofitVersion" }
+squareup-http3 = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp3Version" }
+squareup-http3-interceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okhttp3Version" }
 #coil={group="io.coil-kt",name="coil",version.ref="coilVersion"}
 #raamcosta-compose-destination={group="io.github.raamcosta.compose-destinations",name="core",version.ref="navComposeVersion"}
 #raamcosta-compose-destination-ksp={group="io.github.raamcosta.compose-destinations",name="ksp",version.ref="navComposeVersion"}
 #opencsv={group="com.opencsv",name="opencsv",version.ref="openCSVVersion"}
 
-mapbox_android = {group ="com.mapbox.maps",name="android",version.ref="mapboxVersion" }
-mapbox_compose = {group="com.mapbox.extension",name="maps-compose",version.ref = "mapboxVersion"}
-google_android_map_service = {group = "com.google.android.gms",name="play-services-maps",version.ref = "gmsMapVersion"}
+mapbox_android = { group = "com.mapbox.maps", name = "android", version.ref = "mapboxVersion" }
+mapbox_compose = { group = "com.mapbox.extension", name = "maps-compose", version.ref = "mapboxVersion" }
+google_android_map_service = { group = "com.google.android.gms", name = "play-services-maps", version.ref = "gmsMapVersion" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
 jetbrainsKotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
-hiltDagger={id="com.google.dagger.hilt.android",version.ref="hiltVersion"}
-androidksp ={id="com.google.devtools.ksp",version.ref="ksp"}
+hiltDagger = { id = "com.google.dagger.hilt.android", version.ref = "hiltVersion" }
+androidksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 #
 #gmsService = {id="com.google.gms.google-services",version.ref="gmsVersion"}
 #mapBoxService = {id="com.google.android.libraries.mapsplatform.secrets-gradle-plugin",version.ref= "mapPlatformVersion"}
-

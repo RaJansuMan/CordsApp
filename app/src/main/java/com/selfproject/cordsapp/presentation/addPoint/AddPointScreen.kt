@@ -16,20 +16,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.selfproject.cordsapp.domain.model.CoordinateSystemType
 import com.selfproject.cordsapp.domain.model.ElevationType
 import com.selfproject.cordsapp.presentation.common.CustomDropdownSpinner
 import com.selfproject.cordsapp.presentation.common.CustomOutlinedTextField
-import com.selfproject.cordsapp.ui.theme.CordsAppTheme
 
 @Composable
 fun AddPointScreen(
     navController: NavHostController? = null,
-    viewModel: AddPointViewModel = hiltViewModel()
+    viewModel: AddPointViewModel
 ) {
     Column(
         modifier = Modifier
@@ -45,7 +42,7 @@ fun AddPointScreen(
         if (viewModel.state.coordinateSystemType == CoordinateSystemType.UTM) {
             UTMAddPoint(state = viewModel.state)
         } else {
-            WGSAddPoint(state= viewModel.state)
+            WGSAddPoint(state = viewModel.state)
         }
         CustomDropdownSpinner(
             title = "Elevation Type",
@@ -62,7 +59,7 @@ fun AddPointScreen(
         }
         Button(
             modifier = Modifier.align(Alignment.CenterHorizontally),
-            onClick = { viewModel.onEvent(AddPointScreenEvents.AddPoint)},
+            onClick = { viewModel.onEvent(AddPointScreenEvents.AddPoint) },
             shape = RoundedCornerShape(8.dp),
             colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
         ) {
@@ -73,18 +70,18 @@ fun AddPointScreen(
 }
 
 
-@Preview(showBackground = true)
-@Composable
-fun LightModeAddPointScreenPreview() {
-    CordsAppTheme(darkTheme = false) {
-        AddPointScreen()
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun DarkModeAddPointScreenPreview() {
-    CordsAppTheme(darkTheme = true) {
-        AddPointScreen()
-    }
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun LightModeAddPointScreenPreview() {
+//    CordsAppTheme(darkTheme = false) {
+//        AddPointScreen()
+//    }
+//}
+//
+//@Preview(showBackground = true)
+//@Composable
+//fun DarkModeAddPointScreenPreview() {
+//    CordsAppTheme(darkTheme = true) {
+//        AddPointScreen()
+//    }
+//}

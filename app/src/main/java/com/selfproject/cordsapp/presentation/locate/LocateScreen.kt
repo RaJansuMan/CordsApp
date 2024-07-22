@@ -50,7 +50,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavHostController
+import androidx.navigation.NavController
 import com.selfproject.cordsapp.R
 import com.selfproject.cordsapp.presentation.navigation.Route
 
@@ -59,7 +59,7 @@ import com.selfproject.cordsapp.presentation.navigation.Route
     ExperimentalMaterial3Api::class
 )
 @Composable
-fun LocateScreen(navController: NavHostController) {
+fun LocateScreen(navController: NavController) {
     val localDensity = LocalDensity.current
     var sheetState by remember { mutableStateOf(BottomSheetState.COLLAPSED) }
     val onSheetStateChanged: (BottomSheetState) -> Unit = { newState ->
@@ -107,7 +107,7 @@ fun LocateScreen(navController: NavHostController) {
                 onSheetStateChanged = onSheetStateChanged
             ) {
                 Column {
-                    TopSheet(modifier = Modifier.height(topHeight), navController!!)
+                    TopSheet(modifier = Modifier.height(topHeight), navController)
                     TopHeaderCard(modifier = Modifier.height(halfExpandedHeight - topHeight))
                     BottomCard()
                 }
@@ -118,7 +118,7 @@ fun LocateScreen(navController: NavHostController) {
 
 
 @Composable
-fun TopSheet(modifier: Modifier = Modifier, navController: NavHostController) {
+fun TopSheet(modifier: Modifier = Modifier, navController: NavController) {
     Row(
         modifier = modifier
             .fillMaxWidth()
@@ -152,7 +152,7 @@ fun TopSheet(modifier: Modifier = Modifier, navController: NavHostController) {
         }
 
         FloatingActionButton(
-            onClick = { navController.navigate(Route.LocateScreen.route) },
+            onClick = { navController.navigate(Route.AddPointScreen.route) },
             modifier = Modifier.padding(2.dp),
             shape = RoundedCornerShape(18.dp),
             contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
