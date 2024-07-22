@@ -7,43 +7,70 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import com.selfproject.cordsapp.presentation.common.CustomDropdownSpinner
 import com.selfproject.cordsapp.presentation.common.CustomOutlinedTextField
-import com.selfproject.cordsapp.ui.theme.CordsAppTheme
 
 @Composable
-fun UTMAddPoint(modifier: Modifier = Modifier) {
-    Column(modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(8.dp)) {
+fun UTMAddPoint(modifier: Modifier = Modifier, state: AddPointScreenState) {
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
         Row(
             modifier = Modifier
                 .wrapContentWidth()
                 .wrapContentSize(unbounded = false),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            CustomDropdownSpinner(modifier.weight(1.0f),title = "Zone No", items = listOf("A", "B", "C")) {}
-            CustomDropdownSpinner(modifier.weight(1.0f),title = "Zone Letter", items = listOf("1", "2", "3")) {}
+            CustomOutlinedTextField(
+                modifier = modifier.weight(1.0f),
+                placeholder = "Zone No",
+                value = state.zoneNumber,
+                maxLength = 1,
+                keyboardType = KeyboardType.Number
+            ) {
+                state.zoneNumber = it
+            }
+            CustomOutlinedTextField(
+                modifier = modifier.weight(1.0f),
+                placeholder = "Zone No",
+                maxLength = 1,
+                value = state.zoneLetter
+            ) {
+                state.zoneLetter = it
+            }
         }
-        CustomOutlinedTextField(placeholder = "Easting"){}
-        CustomOutlinedTextField(placeholder = "Northing"){}
+        CustomOutlinedTextField(
+            placeholder = "Easting",
+            value = state.easting,
+            keyboardType = KeyboardType.Number
+        ) {
+            state.easting = it
+        }
+        CustomOutlinedTextField(
+            placeholder = "Northing",
+            value = state.northing,
+            keyboardType = KeyboardType.Number
+        ) {
+            state.northing = it
+        }
 
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun LightModeUTMAddPointPreview() {
-    CordsAppTheme(darkTheme = false) {
-        UTMAddPoint()
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun DarkModeUTMAddPointPreview() {
-    CordsAppTheme(darkTheme = true) {
-        UTMAddPoint()
-    }
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun LightModeUTMAddPointPreview() {
+//    CordsAppTheme(darkTheme = false) {
+//        UTMAddPoint()
+//    }
+//}
+//
+//@Preview(showBackground = true)
+//@Composable
+//fun DarkModeUTMAddPointPreview() {
+//    CordsAppTheme(darkTheme = true) {
+//        UTMAddPoint()
+//    }
+//}

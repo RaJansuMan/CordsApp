@@ -48,18 +48,18 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import com.selfproject.cordsapp.R
-import com.selfproject.cordsapp.ui.theme.CordsAppTheme
+import com.selfproject.cordsapp.presentation.navigation.Route
 
 @OptIn(
     ExperimentalFoundationApi::class, ExperimentalMaterialApi::class,
     ExperimentalMaterial3Api::class
 )
 @Composable
-fun LocateScreen() {
+fun LocateScreen(navController: NavHostController) {
     val localDensity = LocalDensity.current
     var sheetState by remember { mutableStateOf(BottomSheetState.COLLAPSED) }
     val onSheetStateChanged: (BottomSheetState) -> Unit = { newState ->
@@ -74,7 +74,7 @@ fun LocateScreen() {
 
 
     Box(modifier = Modifier.fillMaxSize()) {
-//        MapBoxMap(point = null)
+        MapBoxMap(point = null)
         ExpandedSearchView(
             modifier = Modifier
                 .height(48.dp)
@@ -107,18 +107,18 @@ fun LocateScreen() {
                 onSheetStateChanged = onSheetStateChanged
             ) {
                 Column {
-                    TopSheet(modifier = Modifier.height(topHeight))
+                    TopSheet(modifier = Modifier.height(topHeight), navController!!)
                     TopHeaderCard(modifier = Modifier.height(halfExpandedHeight - topHeight))
                     BottomCard()
                 }
             }
         }
     }
-    }
+}
 
 
 @Composable
-fun TopSheet(modifier: Modifier = Modifier) {
+fun TopSheet(modifier: Modifier = Modifier, navController: NavHostController) {
     Row(
         modifier = modifier
             .fillMaxWidth()
@@ -152,7 +152,7 @@ fun TopSheet(modifier: Modifier = Modifier) {
         }
 
         FloatingActionButton(
-            onClick = { /* TODO: Handle FAB click */ },
+            onClick = { navController.navigate(Route.LocateScreen.route) },
             modifier = Modifier.padding(2.dp),
             shape = RoundedCornerShape(18.dp),
             contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -230,6 +230,7 @@ fun TopHeaderCard(modifier: Modifier = Modifier) {
     }
 
 }
+
 @Composable
 fun BottomCard(modifier: Modifier = Modifier) {
     Card(
@@ -323,18 +324,18 @@ fun TextRow(modifier: Modifier = Modifier, field: String, value: String) {
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun LightModePreview() {
-    CordsAppTheme(darkTheme = false) {
-        LocateScreen()
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun DarkModePreview() {
-    CordsAppTheme(darkTheme = true) {
-        LocateScreen()
-    }
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun LightModePreview() {
+//    CordsAppTheme(darkTheme = false) {
+//        LocateScreen()
+//    }
+//}
+//
+//@Preview(showBackground = true)
+//@Composable
+//fun DarkModePreview() {
+//    CordsAppTheme(darkTheme = true) {
+//        LocateScreen()
+//    }
+//}

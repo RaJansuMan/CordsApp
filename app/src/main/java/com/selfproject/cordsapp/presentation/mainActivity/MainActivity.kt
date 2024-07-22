@@ -12,7 +12,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.selfproject.cordsapp.presentation.home.HomeScreen
+import com.selfproject.cordsapp.presentation.navigation.HomeNavGraph
 import com.selfproject.cordsapp.ui.theme.CordsAppTheme
 
 class MainActivity : ComponentActivity() {
@@ -28,7 +28,7 @@ class MainActivity : ComponentActivity() {
                     Box(modifier = Modifier
                         .background(MaterialTheme.colorScheme.background)
                         .fillMaxSize()) {
-                      HomeScreen()
+                      HomeNavGraph()
                     }
                 }
             }

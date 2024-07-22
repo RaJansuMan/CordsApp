@@ -3,7 +3,6 @@ package com.selfproject.cordsapp.presentation.home
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
@@ -11,7 +10,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -25,12 +23,14 @@ import com.selfproject.cordsapp.presentation.navigation.TabNavGraph
 import com.selfproject.cordsapp.ui.theme.CordsAppTheme
 import com.selfproject.cordsapp.ui.theme.lightBlack
 import com.selfproject.cordsapp.ui.theme.white
-import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun HomeScreen(modifier: Modifier = Modifier,
-               darkTheme: Boolean = isSystemInDarkTheme()){
+fun HomeScreen(
+    modifier: Modifier = Modifier,
+    navController: NavController? = null,
+    darkTheme: Boolean = isSystemInDarkTheme()
+) {
     val tabTitles = listOf("Locate", "Archive")
     val coroutineScope = rememberCoroutineScope()
     val pagerState = rememberPagerState(pageCount = { tabTitles.count() })
@@ -55,16 +55,17 @@ fun HomeScreen(modifier: Modifier = Modifier,
                 Tab(
                     selected = index == selectedItem,
                     onClick = {
-                              when(index){
-                                  0-> navigateToTab(
-                                      navController = navController,
-                                      route = Route.LocateScreen.route
-                                  )
-                                  1-> navigateToTab(
-                                      navController = navController,
-                                      route = Route.ArchiveScreen.route
-                                  )
-                              }
+                        when (index) {
+                            0 -> navigateToTab(
+                                navController = navController,
+                                route = Route.LocateScreen.route
+                            )
+
+                            1 -> navigateToTab(
+                                navController = navController,
+                                route = Route.ArchiveScreen.route
+                            )
+                        }
                     },
                     text = { Text(text = title) },
                     unselectedContentColor = unselectedColor
