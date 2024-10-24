@@ -38,7 +38,6 @@ private val DarkColorScheme = darkColorScheme(
 
     background = grayShade // for light background
 
-    
 
 )
 

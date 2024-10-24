@@ -19,8 +19,6 @@ class AddPointViewModel @Inject constructor() :
             AddPointScreenEvents.AddPoint -> {
 
             }
-
-            else -> {}
         }
     }
 }

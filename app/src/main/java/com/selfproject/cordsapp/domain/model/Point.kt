@@ -1,6 +1,7 @@
 package com.selfproject.cordsapp.domain.model
 
 data class Point(
+    val pointId: Int,
     val cordsType: CoordinateSystemType,
     val wgs84Coords: WGS84Coordinate? = null,
     val utmCoordinate: UTMCoordinate? = null,

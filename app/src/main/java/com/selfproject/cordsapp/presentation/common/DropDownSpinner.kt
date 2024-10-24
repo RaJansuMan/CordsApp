@@ -73,7 +73,7 @@ fun CustomDropdownSpinner(
             ) {
                 items.forEach { item ->
                     DropdownMenuItem(
-                        text = { Text(item) },
+                        text = { Text(item,color = MaterialTheme.colorScheme.onSurfaceVariant) },
                         onClick = {
                             selectedText = item
                             onItemSelected(item)

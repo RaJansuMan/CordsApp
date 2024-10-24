@@ -1,4 +1,4 @@
-package com.selfproject.cordsapp.presentation.addPoint
+package com.selfproject.cordsapp.presentation.addPoint.views
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -9,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import com.selfproject.cordsapp.presentation.addPoint.AddPointScreenState
 import com.selfproject.cordsapp.presentation.common.CustomOutlinedTextField
 
 @Composable
@@ -25,16 +26,16 @@ fun UTMAddPoint(modifier: Modifier = Modifier, state: AddPointScreenState) {
         ) {
             CustomOutlinedTextField(
                 modifier = modifier.weight(1.0f),
-                placeholder = "Zone No",
+                placeholder = "Zone Number",
                 value = state.zoneNumber,
-                maxLength = 1,
+                maxLength = 2,
                 keyboardType = KeyboardType.Number
             ) {
                 state.zoneNumber = it
             }
             CustomOutlinedTextField(
                 modifier = modifier.weight(1.0f),
-                placeholder = "Zone No",
+                placeholder = "Zone Letter",
                 maxLength = 1,
                 value = state.zoneLetter
             ) {

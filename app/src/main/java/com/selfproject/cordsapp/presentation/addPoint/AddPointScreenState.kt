@@ -14,4 +14,5 @@ data class AddPointScreenState(
     var zoneNumber: InputForm = InputForm(),
     var easting: InputForm = InputForm(),
     var northing: InputForm = InputForm(),
+    var isProgress:Boolean = false
 )
