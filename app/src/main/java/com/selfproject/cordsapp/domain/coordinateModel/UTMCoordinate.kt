@@ -1,4 +1,4 @@
-package com.selfproject.cordsapp.domain.model
+package com.selfproject.cordsapp.domain.coordinateModel
 
 
 val validZoneLetters = listOf(

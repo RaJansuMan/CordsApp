@@ -1,6 +1,6 @@
 package com.selfproject.cordsapp.domain.repository
 
-import com.selfproject.cordsapp.domain.model.Point
+import com.selfproject.cordsapp.domain.coordinateModel.Point
 import com.selfproject.cordsapp.domain.model.Result
 import kotlinx.coroutines.flow.Flow
 

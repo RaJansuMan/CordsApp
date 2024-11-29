@@ -14,8 +14,8 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.selfproject.cordsapp.domain.model.CoordinateSystemType
-import com.selfproject.cordsapp.domain.model.ElevationType
+import com.selfproject.cordsapp.domain.coordinateModel.CoordinateSystemType
+import com.selfproject.cordsapp.domain.coordinateModel.ElevationType
 import com.selfproject.cordsapp.presentation.addPoint.AddPointScreenEvents
 import com.selfproject.cordsapp.presentation.addPoint.AddPointViewModel
 import com.selfproject.cordsapp.presentation.common.ButtonProgressBar
@@ -37,7 +37,7 @@ fun AddPointScreen(
         verticalArrangement = Arrangement.spacedBy(15.dp)
     ) {
         CustomTitleBar(title = "Add Point") {
-            navController?.navigate(Route.HomeScreen .route)
+            navController?.navigate(Route.HomeScreen.route)
         }
         Column(
             modifier = Modifier
@@ -72,7 +72,11 @@ fun AddPointScreen(
             ) {
                 viewModel.state.elevation = it
             }
-            ButtonProgressBar(modifier = Modifier.align(Alignment.CenterHorizontally),text = "ADD POINT", isProgress = viewModel.state.isProgress) {
+            ButtonProgressBar(
+                modifier = Modifier.align(Alignment.CenterHorizontally),
+                text = "ADD POINT",
+                isProgress = viewModel.state.isProgress
+            ) {
                 viewModel.state.isProgress = true
                 viewModel.onEvent(AddPointScreenEvents.AddPoint)
             }

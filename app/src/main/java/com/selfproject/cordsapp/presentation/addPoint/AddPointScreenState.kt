@@ -1,7 +1,7 @@
 package com.selfproject.cordsapp.presentation.addPoint
 
-import com.selfproject.cordsapp.domain.model.CoordinateSystemType
-import com.selfproject.cordsapp.domain.model.ElevationType
+import com.selfproject.cordsapp.domain.coordinateModel.CoordinateSystemType
+import com.selfproject.cordsapp.domain.coordinateModel.ElevationType
 import com.selfproject.cordsapp.domain.model.InputForm
 
 data class AddPointScreenState(
@@ -14,5 +14,5 @@ data class AddPointScreenState(
     var zoneNumber: InputForm = InputForm(),
     var easting: InputForm = InputForm(),
     var northing: InputForm = InputForm(),
-    var isProgress:Boolean = false
+    var isProgress: Boolean = false
 )

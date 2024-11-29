@@ -1,7 +1,7 @@
 package com.selfproject.cordsapp.data.repositoy
 
 import com.selfproject.cordsapp.data.remote.PointApi
-import com.selfproject.cordsapp.domain.model.Point
+import com.selfproject.cordsapp.domain.coordinateModel.Point
 import com.selfproject.cordsapp.domain.model.Result
 import com.selfproject.cordsapp.domain.repository.PointRepository
 import kotlinx.coroutines.flow.Flow
