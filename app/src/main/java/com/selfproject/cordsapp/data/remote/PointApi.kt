@@ -2,11 +2,12 @@ package com.selfproject.cordsapp.data.remote
 
 import retrofit2.Response
 import retrofit2.http.Body
-import retrofit2.http.POST
+import retrofit2.http.GET
 
 interface PointApi {
-    @POST("GetPoint")
-    suspend fun sendStockData(@Body stockData: PointQuery): Response<Unit>
+    @GET("GetPoint")
+    suspend fun getRemotePoint(@Body pointData: PointQuery): Response<ResponseCoordinates>
+
 
     companion object {
         const val API_KEY = "JI7KYLN2NQIKY7KG"

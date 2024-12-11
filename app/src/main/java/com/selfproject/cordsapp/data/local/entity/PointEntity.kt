@@ -4,6 +4,7 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import com.selfproject.cordsapp.domain.model.Layer
 import java.sql.Date
 
 @Entity(
@@ -19,7 +20,7 @@ import java.sql.Date
     indices = [Index(value = ["folderId"])]
 )
 data class PointEntity(
-    @PrimaryKey(autoGenerate = true) val pointId: Int = 0,
+    @PrimaryKey(autoGenerate = true) val pointId: Int? = null,
     val folderId: Int,
     val lat: Double,
     val lon: Double,
@@ -32,6 +33,6 @@ data class PointEntity(
     val eleEgm08: Double,
     val eleEgm96: Double,
     val description: String,
-    val pointLabel: Char,
-//    val pontNo : Int
+    val layer: Layer,
+    val pointNo: Int
 )

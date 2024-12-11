@@ -14,8 +14,8 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.selfproject.cordsapp.domain.coordinateModel.CoordinateSystemType
-import com.selfproject.cordsapp.domain.coordinateModel.ElevationType
+import com.selfproject.cordsapp.domain.model.coordinateModel.CoordinateSystemType
+import com.selfproject.cordsapp.domain.model.coordinateModel.ElevationType
 import com.selfproject.cordsapp.presentation.addPoint.AddPointScreenEvents
 import com.selfproject.cordsapp.presentation.addPoint.AddPointViewModel
 import com.selfproject.cordsapp.presentation.common.ButtonProgressBar

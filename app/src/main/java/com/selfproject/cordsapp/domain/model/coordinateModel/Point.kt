@@ -1,17 +1,19 @@
-package com.selfproject.cordsapp.domain.coordinateModel
+package com.selfproject.cordsapp.domain.model.coordinateModel
 
+import com.selfproject.cordsapp.domain.model.Layer
 import java.sql.Date
 
 data class Point(
-    val pointId: Int,
+    val pointId: Int?,
     val cordsType: CoordinateSystemType,
     val wgs84Coords: WGS84Coordinate? = null,
     val utmCoordinate: UTMCoordinate? = null,
     val elevation: Elevation,
     val description: String,
-    val pointLabel: Char,
+    val layer: Layer,
     val pointNumber: Int,
-    val createdOn: Date? = null
+    val createdOn: Date,
+    val folderId: Int
 )
 
 enum class CoordinateSystemType(val code: String, val codeInt: Int) {

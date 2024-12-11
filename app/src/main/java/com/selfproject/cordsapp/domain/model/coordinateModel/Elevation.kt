@@ -1,4 +1,4 @@
-package com.selfproject.cordsapp.domain.coordinateModel
+package com.selfproject.cordsapp.domain.model.coordinateModel
 
 data class Elevation(
     val elevationType: ElevationType,

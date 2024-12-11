@@ -1,8 +1,8 @@
 package com.selfproject.cordsapp.presentation.addPoint
 
-import com.selfproject.cordsapp.domain.coordinateModel.CoordinateSystemType
-import com.selfproject.cordsapp.domain.coordinateModel.ElevationType
 import com.selfproject.cordsapp.domain.model.InputForm
+import com.selfproject.cordsapp.domain.model.coordinateModel.CoordinateSystemType
+import com.selfproject.cordsapp.domain.model.coordinateModel.ElevationType
 
 data class AddPointScreenState(
     var coordinateSystemType: CoordinateSystemType = CoordinateSystemType.WGS84,

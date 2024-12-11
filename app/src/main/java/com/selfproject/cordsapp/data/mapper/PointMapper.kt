@@ -2,16 +2,15 @@ package com.selfproject.cordsapp.data.mapper
 
 import com.selfproject.cordsapp.data.local.entity.PointEntity
 import com.selfproject.cordsapp.data.remote.PointQuery
-import com.selfproject.cordsapp.domain.coordinateModel.CoordinateSystemType
-import com.selfproject.cordsapp.domain.coordinateModel.ElevationType
-import com.selfproject.cordsapp.domain.coordinateModel.Point
+import com.selfproject.cordsapp.domain.model.coordinateModel.CoordinateSystemType
+import com.selfproject.cordsapp.domain.model.coordinateModel.Point
 
 fun Point.toPointQuery(): PointQuery {
     val z = when (elevation.elevationType) {
-        ElevationType.ALL -> elevation.ellipsoidal
-        ElevationType.ELLIPSOIDAL -> elevation.ellipsoidal
-        ElevationType.EGM96 -> elevation.egm96
-        ElevationType.EGM08 -> elevation.egm08
+        com.selfproject.cordsapp.domain.model.coordinateModel.ElevationType.ALL -> elevation.ellipsoidal
+        com.selfproject.cordsapp.domain.model.coordinateModel.ElevationType.ELLIPSOIDAL -> elevation.ellipsoidal
+        com.selfproject.cordsapp.domain.model.coordinateModel.ElevationType.EGM96 -> elevation.egm96
+        com.selfproject.cordsapp.domain.model.coordinateModel.ElevationType.EGM08 -> elevation.egm08
     }
     if (z == null) {
         throw IllegalArgumentException("Elevation cannot be null")
@@ -57,7 +56,7 @@ fun Point.pointToPointQuery(folderId: Int): PointEntity {
     if (cordsType != CoordinateSystemType.ALL) {
         throw IllegalArgumentException("Coords type should be all")
     }
-    if (elevation.elevationType != ElevationType.ALL) {
+    if (elevation.elevationType != com.selfproject.cordsapp.domain.model.coordinateModel.ElevationType.ALL) {
         throw IllegalArgumentException("Elevation type should be all")
     }
     return PointEntity(
@@ -72,8 +71,9 @@ fun Point.pointToPointQuery(folderId: Int): PointEntity {
         eleEgm08 = elevation.egm08!!,
         eleEgm96 = elevation.egm96!!,
         description = description,
-        pointLabel = pointLabel,
-        createdOn = createdOn!!
+        layer = layer,
+        createdOn = createdOn!!,
+        pointNo = pointNumber
     )
 
 }
