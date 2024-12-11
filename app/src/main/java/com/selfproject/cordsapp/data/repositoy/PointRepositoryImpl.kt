@@ -2,6 +2,8 @@ package com.selfproject.cordsapp.data.repositoy
 
 import com.selfproject.cordsapp.data.local.AppDatabase
 import com.selfproject.cordsapp.data.mapper.toApiResponse
+import com.selfproject.cordsapp.data.mapper.toPoint
+import com.selfproject.cordsapp.data.mapper.toPointEntity
 import com.selfproject.cordsapp.data.mapper.toPointQuery
 import com.selfproject.cordsapp.data.remote.ApiResponse
 import com.selfproject.cordsapp.data.remote.PointApi
@@ -29,20 +31,25 @@ class PointRepositoryImpl @Inject constructor(
         return flow {
             emit(Result.Loading())
             val response = try {
-                val result = api.getRemotePoint(point.toPointQuery()).toApiResponse()
-                when (result) {
+                when (val result = api.getRemotePoint(point.toPointQuery()).toApiResponse()) {
                     is ApiResponse.Error -> {
-
+                        emit(Result.Error(result.errorMessage))
+                        null
                     }
 
                     is ApiResponse.Success -> {
-
+                        result.data.toPointEntity(point)
                     }
                 }
             } catch (e: Exception) {
-                ApiResponse.Error(-1, e.message ?: "Unknown error")
+                emit(Result.Error(e.message ?: "Unknown error"))
                 null
             }
+            response?.let { pointEntity ->
+                pointDao.insertPoint(pointEntity)
+                emit(Result.Success(data = pointEntity.toPoint()))
+            }
+            emit(Result.Loading(false))
         }
     }
 

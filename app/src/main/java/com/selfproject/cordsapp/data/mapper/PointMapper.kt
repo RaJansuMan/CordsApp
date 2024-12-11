@@ -3,7 +3,11 @@ package com.selfproject.cordsapp.data.mapper
 import com.selfproject.cordsapp.data.local.entity.PointEntity
 import com.selfproject.cordsapp.data.remote.PointQuery
 import com.selfproject.cordsapp.domain.model.coordinateModel.CoordinateSystemType
+import com.selfproject.cordsapp.domain.model.coordinateModel.Elevation
+import com.selfproject.cordsapp.domain.model.coordinateModel.ElevationType
 import com.selfproject.cordsapp.domain.model.coordinateModel.Point
+import com.selfproject.cordsapp.domain.model.coordinateModel.UTMCoordinate
+import com.selfproject.cordsapp.domain.model.coordinateModel.WGS84Coordinate
 
 fun Point.toPointQuery(): PointQuery {
     val z = when (elevation.elevationType) {
@@ -76,4 +80,24 @@ fun Point.pointToPointQuery(folderId: Int): PointEntity {
         pointNo = pointNumber
     )
 
+}
+
+fun PointEntity.toPoint(): Point {
+    return Point(
+        pointId = pointNo,
+        cordsType = CoordinateSystemType.ALL,
+        wgs84Coords = WGS84Coordinate(lat, lon),
+        utmCoordinate = UTMCoordinate(east, north, zoneNumber, zoneLetter),
+        elevation = Elevation(
+            ElevationType.ALL,
+            ellipsoidal = eleEllip,
+            egm08 = eleEgm08,
+            egm96 = eleEgm96
+        ),
+        description = description,
+        layer = layer,
+        pointNumber = pointNo,
+        createdOn = createdOn,
+        folderId = folderId
+    )
 }
