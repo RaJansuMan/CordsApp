@@ -7,7 +7,8 @@ import kotlinx.coroutines.flow.Flow
 
 interface PointRepository {
     suspend fun addPoint(point: Point): Flow<Result<Point>>
-    suspend fun deletePoint(point: Point): Flow<Result<Point>>
-    suspend fun getAllPoint(point: Point): Flow<Result<FolderWithPoint>>
-    suspend fun getPointDetail(pointId: Int): Flow<Result<Point>>
+    suspend fun deletePoint(point: Point): Flow<Result<Void>>
+    suspend fun getAllPoint(folderId: Int): Flow<Result<FolderWithPoint>>
+    suspend fun getPointDetailFromDatabase(pointId: Int): Flow<Result<Point>>
+    fun getPointDetail(pointId: Int): Point
 }

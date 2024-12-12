@@ -1,6 +1,7 @@
 package com.selfproject.cordsapp.di
 
-import com.selfproject.cordsapp.data.repositoy.PointRepositoryImpl
+import com.selfproject.cordsapp.data.repositoy.FilePointRepositoryImpl
+import com.selfproject.cordsapp.domain.repository.FileRepository
 import com.selfproject.cordsapp.domain.repository.PointRepository
 import dagger.Binds
 import dagger.Module
@@ -15,6 +16,12 @@ abstract class RepositoryModule {
     @Binds
     @Singleton
     abstract fun bindPointRepository(
-        pointRepositoryImpl: PointRepositoryImpl
+        filePointRepositoryImpl: FilePointRepositoryImpl
     ): PointRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindFileRepository(
+        filePointRepositoryImpl: FilePointRepositoryImpl
+    ): FileRepository
 }

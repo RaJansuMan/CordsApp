@@ -14,5 +14,9 @@ data class AddPointScreenState(
     var zoneNumber: InputForm = InputForm(),
     var easting: InputForm = InputForm(),
     var northing: InputForm = InputForm(),
-    var isProgress: Boolean = false
+    var isProgress: Boolean = false,
+    var pointNo: InputForm = InputForm(),
+    var description : InputForm = InputForm(),
+    var layerList : List<String> = emptyList(),
+    var selectedLayer : String = ""
 )

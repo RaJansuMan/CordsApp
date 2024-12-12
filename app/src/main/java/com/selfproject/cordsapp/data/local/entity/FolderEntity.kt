@@ -11,5 +11,5 @@ data class FolderEntity(
     val name: String,
     val description: String,
     val createdOn: Date,
-    val layersId: List<Layer>
+    val layers: List<Layer>
 )

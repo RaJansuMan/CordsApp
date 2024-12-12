@@ -14,8 +14,12 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.selfproject.cordsapp.domain.model.FolderWithPoint
+import com.selfproject.cordsapp.domain.model.Result
 import com.selfproject.cordsapp.domain.model.coordinateModel.CoordinateSystemType
 import com.selfproject.cordsapp.domain.model.coordinateModel.ElevationType
+import com.selfproject.cordsapp.domain.model.coordinateModel.Point
+import com.selfproject.cordsapp.domain.repository.PointRepository
 import com.selfproject.cordsapp.presentation.addPoint.AddPointScreenEvents
 import com.selfproject.cordsapp.presentation.addPoint.AddPointViewModel
 import com.selfproject.cordsapp.presentation.common.ButtonProgressBar
@@ -24,6 +28,7 @@ import com.selfproject.cordsapp.presentation.common.CustomOutlinedTextField
 import com.selfproject.cordsapp.presentation.common.CustomTitleBar
 import com.selfproject.cordsapp.presentation.navigation.Route
 import com.selfproject.cordsapp.ui.theme.CordsAppTheme
+import kotlinx.coroutines.flow.Flow
 
 @Composable
 fun AddPointScreen(
@@ -47,6 +52,25 @@ fun AddPointScreen(
             verticalArrangement = Arrangement.spacedBy(8.dp)
         )
         {
+            CustomOutlinedTextField(
+                value = viewModel.state.pointNo,
+                placeholder = "Point No",
+                keyboardType = KeyboardType.Number
+            ) {
+                viewModel.state.pointNo = it
+            }
+            CustomOutlinedTextField(
+                value = viewModel.state.description,
+                placeholder = "Point Description",
+                keyboardType = KeyboardType.Number
+            ) {
+                viewModel.state.description = it
+            }
+            CustomDropdownSpinner(title = "Layer", items = viewModel.state.layerList, selectedItem = viewModel.state.selectedLayer ) {
+                viewModel.state = viewModel.state.copy(
+                    selectedLayer = it
+                )
+            }
             CustomDropdownSpinner(title = "Coordinate System", items = listOf("WGS-84", "UTM")) {
                 viewModel.state = viewModel.state.copy(
                     coordinateSystemType = CoordinateSystemType.fromCode(it)
@@ -80,32 +104,45 @@ fun AddPointScreen(
                 viewModel.state.isProgress = true
                 viewModel.onEvent(AddPointScreenEvents.AddPoint)
             }
-//            Button(
-//                modifier = Modifier  .align(Alignment.CenterHorizontally),
-//                onClick = { viewModel.onEvent(AddPointScreenEvents.AddPoint) },
-//                shape = RoundedCornerShape(8.dp),
-//                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
-//            ) {
-//                Text(text = "ADD POINT", style = TextStyle(fontWeight = FontWeight.Bold))
-//            }
         }
 
     }
 }
+class MockRepository : PointRepository {
+    override suspend fun addPoint(point: Point): Flow<Result<Point>> {
+        TODO("Not yet implemented")
+    }
 
+    override suspend fun deletePoint(point: Point): Flow<Result<Point>> {
+        TODO("Not yet implemented")
+    }
 
+    override suspend fun getAllPoint(point: Point): Flow<Result<FolderWithPoint>> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun getPointDetail(pointId: Int): Flow<Result<Point>> {
+        TODO("Not yet implemented")
+    }
+}
 @Preview(showBackground = true)
 @Composable
 fun LightModeAddPointScreenPreview() {
+    val mockViewModel = AddPointViewModel(
+        pointRepository= MockRepository()
+    )
     CordsAppTheme(darkTheme = false) {
-        AddPointScreen(viewModel = AddPointViewModel())
+        AddPointScreen(viewModel = mockViewModel)
     }
 }
 
 @Preview(showBackground = true)
 @Composable
 fun DarkModeAddPointScreenPreview() {
+    val mockViewModel = AddPointViewModel(
+        pointRepository= MockRepository()
+    )
     CordsAppTheme(darkTheme = true) {
-        AddPointScreen(viewModel = AddPointViewModel())
+        AddPointScreen(viewModel = mockViewModel)
     }
 }

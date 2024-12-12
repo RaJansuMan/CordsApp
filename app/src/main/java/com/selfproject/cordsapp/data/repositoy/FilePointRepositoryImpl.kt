@@ -9,8 +9,10 @@ import com.selfproject.cordsapp.data.remote.ApiResponse
 import com.selfproject.cordsapp.data.remote.PointApi
 import com.selfproject.cordsapp.domain.model.Folder
 import com.selfproject.cordsapp.domain.model.FolderWithPoint
+import com.selfproject.cordsapp.domain.model.Layer
 import com.selfproject.cordsapp.domain.model.Result
 import com.selfproject.cordsapp.domain.model.coordinateModel.Point
+import com.selfproject.cordsapp.domain.repository.FileRepository
 import com.selfproject.cordsapp.domain.repository.PointRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -18,10 +20,10 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class PointRepositoryImpl @Inject constructor(
+class FilePointRepositoryImpl @Inject constructor(
     private val api: PointApi,
     db: AppDatabase
-) : PointRepository {
+) : PointRepository, FileRepository {
 
     private val folderDao = db.folderDao()
     private val pointDao = db.pointDao()
@@ -53,16 +55,47 @@ class PointRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun deletePoint(point: Point): Flow<Result<Point>> {
+    override suspend fun deletePoint(point: Point): Flow<Result<Void>> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun getAllPoint(point: Point): Flow<Result<FolderWithPoint>> {
+    override suspend fun getAllPoint(folderId: Int): Flow<Result<FolderWithPoint>> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun getPointDetail(pointId: Int): Flow<Result<Point>> {
+    override suspend fun getPointDetailFromDatabase(pointId: Int): Flow<Result<Point>> {
         TODO("Not yet implemented")
     }
 
+    override fun getPointDetail(pointId: Int): Point {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun getLayerList(folderId: Int): Flow<Result<List<Layer>>> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun getFolders(): Flow<Result<List<Folder>>> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun getFolderDetail(folderId: Int): Flow<Result<Folder>> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun addFolder(folder: Folder): Flow<Result<Folder>> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun deleteFolder(folderId: Int): Flow<Result<Void>> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun addLayer(folderId: Int, layer: Layer): Flow<Result<Layer>> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun deleteLayer(folderId: Int, layer: Layer): Flow<Result<Void>> {
+        TODO("Not yet implemented")
+    }
 }
