@@ -10,7 +10,7 @@ fun Folder.toFolderEntity(): FolderEntity {
         name = name,
         description = description,
         createdOn = createdOn,
-        layers = layers
+        layers = layers.toMutableList()
     )
 }
 
@@ -20,13 +20,21 @@ fun FolderEntity.toFolder(): Folder {
         name = name,
         description = description,
         createdOn = createdOn,
-        layers = layers
+        layers = layers.toList()
     )
 }
 
 fun FolderWithPointsEntity.toFolderWithPoint(): FolderWithPoint {
+    val points = points
+        .filter { it.pointId != null }
+        .groupBy { it.layer.layerId }
+        .mapValues { entry ->
+            entry.value.associate {
+                it.pointId!! to it.toPoint()
+            }
+        }
     return FolderWithPoint(
         folder = folder.toFolder(),
-        points = points.forEach()
+        pointsWithLayer = points.mapValues { it.value.toMutableMap() }.toMutableMap()
     )
 }

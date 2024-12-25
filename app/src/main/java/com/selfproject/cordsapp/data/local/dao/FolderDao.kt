@@ -13,10 +13,13 @@ import com.selfproject.cordsapp.data.local.entity.FolderWithPointsEntity
 @Dao
 interface FolderDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertFolder(folder: FolderEntity)
+    suspend fun insertFolder(folder: FolderEntity): Long
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertFolders(folders: List<FolderEntity>)
+    suspend fun insertFolders(folders: List<FolderEntity>): List<Long>
+
+    @Query("SELECT * FROM folders WHERE folderId = :folderID")
+    suspend fun getFolderById(folderID: Int): FolderEntity?
 
     @Update
     suspend fun updateFolder(folder: FolderEntity)
@@ -29,5 +32,5 @@ interface FolderDao {
 
     @Transaction
     @Query("SELECT * FROM folders WHERE folderId = :folderId")
-    suspend fun getFolderWithPoints(folderId: Int): FolderWithPointsEntity
+    suspend fun getFolderWithPoints(folderId: Int): FolderWithPointsEntity?
 }

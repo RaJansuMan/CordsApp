@@ -10,5 +10,5 @@ interface PointRepository {
     suspend fun deletePoint(point: Point): Flow<Result<Void>>
     suspend fun getAllPoint(folderId: Int): Flow<Result<FolderWithPoint>>
     suspend fun getPointDetailFromDatabase(pointId: Int): Flow<Result<Point>>
-    fun getPointDetail(pointId: Int): Point
+    fun getPointDetail(pointId: Int, layerId: String?): Result<Point>
 }

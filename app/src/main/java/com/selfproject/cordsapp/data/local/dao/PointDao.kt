@@ -14,16 +14,20 @@ import com.selfproject.cordsapp.domain.model.Layer
 @Dao
 interface PointDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertPoint(point: PointEntity)
+    suspend fun insertPoint(point: PointEntity): Long
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertPoints(points: List<PointEntity>)
+    suspend fun insertPoints(points: List<PointEntity>): List<Long>
 
     @Update
     suspend fun updatePoint(point: PointEntity)
 
     @Delete
     suspend fun deletePoint(point: PointEntity)
+
+    @Query("SELECT * FROM points WHERE pointId = :pointId")
+    suspend fun getPointById(pointId: Int): PointEntity?
+
 
     @Query("SELECT * FROM points WHERE folderId = :folderId")
     suspend fun getPointsByFolderId(folderId: Int): List<PointEntity>

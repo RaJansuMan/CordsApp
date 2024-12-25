@@ -66,7 +66,11 @@ fun AddPointScreen(
             ) {
                 viewModel.state.description = it
             }
-            CustomDropdownSpinner(title = "Layer", items = viewModel.state.layerList, selectedItem = viewModel.state.selectedLayer ) {
+            CustomDropdownSpinner(
+                title = "Layer",
+                items = viewModel.state.layerList,
+                selectedItem = viewModel.state.selectedLayer
+            ) {
                 viewModel.state = viewModel.state.copy(
                     selectedLayer = it
                 )
@@ -108,28 +112,37 @@ fun AddPointScreen(
 
     }
 }
+
 class MockRepository : PointRepository {
     override suspend fun addPoint(point: Point): Flow<Result<Point>> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun deletePoint(point: Point): Flow<Result<Point>> {
+    override suspend fun deletePoint(point: Point): Flow<Result<Void>> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun getAllPoint(point: Point): Flow<Result<FolderWithPoint>> {
+
+    override suspend fun getAllPoint(folderId: Int): Flow<Result<FolderWithPoint>> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun getPointDetail(pointId: Int): Flow<Result<Point>> {
+    override suspend fun getPointDetailFromDatabase(pointId: Int): Flow<Result<Point>> {
         TODO("Not yet implemented")
     }
+
+    override fun getPointDetail(pointId: Int, layerId: String?): Result<Point> {
+        TODO("Not yet implemented")
+    }
+
+
 }
+
 @Preview(showBackground = true)
 @Composable
 fun LightModeAddPointScreenPreview() {
     val mockViewModel = AddPointViewModel(
-        pointRepository= MockRepository()
+        pointRepository = MockRepository()
     )
     CordsAppTheme(darkTheme = false) {
         AddPointScreen(viewModel = mockViewModel)
@@ -140,7 +153,7 @@ fun LightModeAddPointScreenPreview() {
 @Composable
 fun DarkModeAddPointScreenPreview() {
     val mockViewModel = AddPointViewModel(
-        pointRepository= MockRepository()
+        pointRepository = MockRepository()
     )
     CordsAppTheme(darkTheme = true) {
         AddPointScreen(viewModel = mockViewModel)

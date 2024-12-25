@@ -18,13 +18,13 @@ class Convertors {
     }
 
     @TypeConverter
-    fun fromLayerList(layerList: List<Layer>): String {
+    fun fromLayerList(layerList: MutableList<Layer>): String {
         return Gson().toJson(layerList)
     }
 
     @TypeConverter
-    fun toLayerList(layerListJson: String): List<Layer> {
-        val type = object : TypeToken<List<Layer>>() {}.type
+    fun toLayerList(layerListJson: String): MutableList<Layer> {
+        val type = object : TypeToken<MutableList<Layer>>() {}.type
         return Gson().fromJson(layerListJson, type)
     }
 

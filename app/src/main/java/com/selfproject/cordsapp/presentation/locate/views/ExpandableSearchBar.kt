@@ -1,4 +1,4 @@
-package com.selfproject.cordsapp.presentation.locate
+package com.selfproject.cordsapp.presentation.locate.views
 
 import androidx.compose.animation.core.Animatable
 import androidx.compose.foundation.background

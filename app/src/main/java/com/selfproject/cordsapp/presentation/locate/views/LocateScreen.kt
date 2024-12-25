@@ -1,4 +1,4 @@
-package com.selfproject.cordsapp.presentation.locate
+package com.selfproject.cordsapp.presentation.locate.views
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -52,6 +52,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.selfproject.cordsapp.R
+import com.selfproject.cordsapp.presentation.locate.LocateViewModel
 import com.selfproject.cordsapp.presentation.navigation.Route
 
 @OptIn(
@@ -59,7 +60,7 @@ import com.selfproject.cordsapp.presentation.navigation.Route
     ExperimentalMaterial3Api::class
 )
 @Composable
-fun LocateScreen(navController: NavController) {
+fun LocateScreen(navController: NavController,viewModel: LocateViewModel) {
     val localDensity = LocalDensity.current
     var sheetState by remember { mutableStateOf(BottomSheetState.COLLAPSED) }
     val onSheetStateChanged: (BottomSheetState) -> Unit = { newState ->
@@ -74,7 +75,7 @@ fun LocateScreen(navController: NavController) {
 
 
     Box(modifier = Modifier.fillMaxSize()) {
-        MapBoxMap(point = null)
+        MapBoxMap(viewModel = viewModel)
         ExpandedSearchView(
             modifier = Modifier
                 .height(48.dp)
