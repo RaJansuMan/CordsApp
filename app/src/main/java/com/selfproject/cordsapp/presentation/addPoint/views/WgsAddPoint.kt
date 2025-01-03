@@ -13,14 +13,14 @@ fun WGSAddPoint(modifier: Modifier = Modifier, state: AddPointScreenState) {
         CustomOutlinedTextField(
             value = state.latitude,
             placeholder = "Latitude",
-            keyboardType = KeyboardType.Number
+            keyboardType = KeyboardType.Decimal
         ) {
             state.latitude = it
         }
         CustomOutlinedTextField(
             value = state.longitude,
             placeholder = "Longitude",
-            keyboardType = KeyboardType.Number
+            keyboardType = KeyboardType.Decimal
         ) {
             state.longitude = it
         }

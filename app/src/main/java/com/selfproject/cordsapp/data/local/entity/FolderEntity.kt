@@ -7,7 +7,7 @@ import java.sql.Date
 
 @Entity(tableName = "folders")
 data class FolderEntity(
-    @PrimaryKey(autoGenerate = true) val folderId: Int = 0,
+    @PrimaryKey(autoGenerate = true) val folderId: Int? = null,
     val name: String,
     val description: String,
     val createdOn: Date,

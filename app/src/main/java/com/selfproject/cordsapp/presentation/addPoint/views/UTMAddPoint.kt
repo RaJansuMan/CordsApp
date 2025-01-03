@@ -45,14 +45,14 @@ fun UTMAddPoint(modifier: Modifier = Modifier, state: AddPointScreenState) {
         CustomOutlinedTextField(
             placeholder = "Easting",
             value = state.easting,
-            keyboardType = KeyboardType.Number
+            keyboardType = KeyboardType.Decimal
         ) {
             state.easting = it
         }
         CustomOutlinedTextField(
             placeholder = "Northing",
             value = state.northing,
-            keyboardType = KeyboardType.Number
+            keyboardType = KeyboardType.Decimal
         ) {
             state.northing = it
         }

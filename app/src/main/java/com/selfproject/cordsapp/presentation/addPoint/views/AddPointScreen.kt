@@ -11,15 +11,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.selfproject.cordsapp.domain.model.FolderWithPoint
-import com.selfproject.cordsapp.domain.model.Result
 import com.selfproject.cordsapp.domain.model.coordinateModel.CoordinateSystemType
 import com.selfproject.cordsapp.domain.model.coordinateModel.ElevationType
-import com.selfproject.cordsapp.domain.model.coordinateModel.Point
-import com.selfproject.cordsapp.domain.repository.PointRepository
 import com.selfproject.cordsapp.presentation.addPoint.AddPointScreenEvents
 import com.selfproject.cordsapp.presentation.addPoint.AddPointViewModel
 import com.selfproject.cordsapp.presentation.common.ButtonProgressBar
@@ -27,8 +22,6 @@ import com.selfproject.cordsapp.presentation.common.CustomDropdownSpinner
 import com.selfproject.cordsapp.presentation.common.CustomOutlinedTextField
 import com.selfproject.cordsapp.presentation.common.CustomTitleBar
 import com.selfproject.cordsapp.presentation.navigation.Route
-import com.selfproject.cordsapp.ui.theme.CordsAppTheme
-import kotlinx.coroutines.flow.Flow
 
 @Composable
 fun AddPointScreen(
@@ -113,49 +106,49 @@ fun AddPointScreen(
     }
 }
 
-class MockRepository : PointRepository {
-    override suspend fun addPoint(point: Point): Flow<Result<Point>> {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun deletePoint(point: Point): Flow<Result<Void>> {
-        TODO("Not yet implemented")
-    }
-
-
-    override suspend fun getAllPoint(folderId: Int): Flow<Result<FolderWithPoint>> {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun getPointDetailFromDatabase(pointId: Int): Flow<Result<Point>> {
-        TODO("Not yet implemented")
-    }
-
-    override fun getPointDetail(pointId: Int, layerId: String?): Result<Point> {
-        TODO("Not yet implemented")
-    }
-
-
-}
-
-@Preview(showBackground = true)
-@Composable
-fun LightModeAddPointScreenPreview() {
-    val mockViewModel = AddPointViewModel(
-        pointRepository = MockRepository()
-    )
-    CordsAppTheme(darkTheme = false) {
-        AddPointScreen(viewModel = mockViewModel)
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun DarkModeAddPointScreenPreview() {
-    val mockViewModel = AddPointViewModel(
-        pointRepository = MockRepository()
-    )
-    CordsAppTheme(darkTheme = true) {
-        AddPointScreen(viewModel = mockViewModel)
-    }
-}
+//class MockRepository : PointRepository {
+//    override suspend fun addPoint(point: Point): Flow<Result<Point>> {
+//        TODO("Not yet implemented")
+//    }
+//
+//    override suspend fun deletePoint(point: Point): Flow<Result<Void>> {
+//        TODO("Not yet implemented")
+//    }
+//
+//
+//    override suspend fun getAllPoint(folderId: Int): Flow<Result<FolderWithPoint>> {
+//        TODO("Not yet implemented")
+//    }
+//
+//    override suspend fun getPointDetailFromDatabase(pointId: Int): Flow<Result<Point>> {
+//        TODO("Not yet implemented")
+//    }
+//
+//    override fun getPointDetail(pointId: Int, layerId: String?): Result<Point> {
+//        TODO("Not yet implemented")
+//    }
+//
+//
+//}
+//
+//@Preview(showBackground = true)
+//@Composable
+//fun LightModeAddPointScreenPreview() {
+//    val mockViewModel = AddPointViewModel(
+//        pointRepository = MockRepository()
+//    )
+//    CordsAppTheme(darkTheme = false) {
+//        AddPointScreen(viewModel = mockViewModel)
+//    }
+//}
+//
+//@Preview(showBackground = true)
+//@Composable
+//fun DarkModeAddPointScreenPreview() {
+//    val mockViewModel = AddPointViewModel(
+//        pointRepository = MockRepository()
+//    )
+//    CordsAppTheme(darkTheme = true) {
+//        AddPointScreen(viewModel = mockViewModel)
+//    }
+//}

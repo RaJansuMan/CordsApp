@@ -7,6 +7,7 @@ import com.selfproject.cordsapp.domain.model.FolderWithPoint
 
 fun Folder.toFolderEntity(): FolderEntity {
     return FolderEntity(
+        folderId = folderId,
         name = name,
         description = description,
         createdOn = createdOn,

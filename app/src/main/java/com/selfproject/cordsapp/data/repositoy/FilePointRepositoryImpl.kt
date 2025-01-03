@@ -120,6 +120,15 @@ class FilePointRepositoryImpl @Inject constructor(
         return Result.Error("Point Id not found")
     }
 
+    override fun getPointLastId(layerId: String): Result<Int> {
+        return if (pointCache.containsKey(layerId)) {
+            Result.Success(
+                pointCache[layerId]?.keys?.maxOfOrNull { it }?.let { it + 1 } ?: 0
+            )
+        } else
+            Result.Error("layer not found")
+    }
+
     override suspend fun getLayerList(folderId: Int): Flow<Result<List<Layer>>> {
         return flow {
             emit(Result.Loading())
@@ -146,15 +155,23 @@ class FilePointRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getFolderDetail(folderId: Int): Flow<Result<Folder>> {
+    override suspend fun getFolderDetail(folderId: Int?): Flow<Result<Folder>> {
         return flow {
             emit(Result.Loading())
-            val newFolder = folderDao.getFolderById(folderId)?.toFolder()
-            if (newFolder == null) {
-                emit(Result.Error("Unable to add the folder"))
+            if (folderId == null) {
+                if (currentFolderCache != null) {
+                    emit(Result.Success(currentFolderCache))
+                } else {
+                    emit(Result.Error("No Folder open"))
+                }
             } else {
-                emit(Result.Success(newFolder))
-                currentFolderCache = newFolder
+                val newFolder = folderDao.getFolderById(folderId)?.toFolder()
+                if (newFolder == null) {
+                    emit(Result.Success(null))
+                } else {
+                    emit(Result.Success(newFolder))
+                    currentFolderCache = newFolder
+                }
             }
             emit(Result.Loading(false))
         }
@@ -196,4 +213,5 @@ class FilePointRepositoryImpl @Inject constructor(
     override suspend fun deleteLayer(folderId: Int, layer: Layer): Flow<Result<Void>> {
         TODO("Not yet implemented")
     }
+
 }
