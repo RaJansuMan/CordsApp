@@ -9,54 +9,56 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import com.selfproject.cordsapp.presentation.addPoint.AddPointScreenState
+import com.selfproject.cordsapp.presentation.addPoint.AddPointViewModel
 import com.selfproject.cordsapp.presentation.common.CustomOutlinedTextField
 
 @Composable
-fun UTMAddPoint(modifier: Modifier = Modifier, state: AddPointScreenState) {
-    Column(
-        modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
-        Row(
-            modifier = Modifier
-                .wrapContentWidth()
-                .wrapContentSize(unbounded = false),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
+fun UTMAddPoint(modifier: Modifier = Modifier, viewModel: AddPointViewModel) {
+    viewModel.apply {
+        Column(
+            modifier = modifier,
+            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            CustomOutlinedTextField(
-                modifier = modifier.weight(1.0f),
-                placeholder = "Zone Number",
-                value = state.zoneNumber,
-                maxLength = 2,
-                keyboardType = KeyboardType.Number
+            Row(
+                modifier = Modifier
+                    .wrapContentWidth()
+                    .wrapContentSize(unbounded = false),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                state.zoneNumber = it
+                CustomOutlinedTextField(
+                    modifier = modifier.weight(1.0f),
+                    placeholder = "Zone Number",
+                    value = state.zoneNumber,
+                    maxLength = 2,
+                    keyboardType = KeyboardType.Number
+                ) {
+                    state = state.copy(zoneNumber = it)
+                }
+                CustomOutlinedTextField(
+                    modifier = modifier.weight(1.0f),
+                    placeholder = "Zone Letter",
+                    maxLength = 1,
+                    value = state.zoneLetter
+                ) {
+                    state = state.copy(zoneLetter = it)
+                }
             }
             CustomOutlinedTextField(
-                modifier = modifier.weight(1.0f),
-                placeholder = "Zone Letter",
-                maxLength = 1,
-                value = state.zoneLetter
+                placeholder = "Easting",
+                value = state.easting,
+                keyboardType = KeyboardType.Decimal
             ) {
-                state.zoneLetter = it
+                state = state.copy(easting = it)
             }
-        }
-        CustomOutlinedTextField(
-            placeholder = "Easting",
-            value = state.easting,
-            keyboardType = KeyboardType.Decimal
-        ) {
-            state.easting = it
-        }
-        CustomOutlinedTextField(
-            placeholder = "Northing",
-            value = state.northing,
-            keyboardType = KeyboardType.Decimal
-        ) {
-            state.northing = it
-        }
+            CustomOutlinedTextField(
+                placeholder = "Northing",
+                value = state.northing,
+                keyboardType = KeyboardType.Decimal
+            ) {
+                state = state.copy(northing = it)
+            }
 
+        }
     }
 }
 

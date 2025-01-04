@@ -123,13 +123,13 @@ class AddPointViewModel @Inject constructor(
                         ElevationType.EGM08 -> egm08 = elevation
                     }
                     val layer =
-                        folder!!.layers.find { it.layerId == extractLayerId(selectedLayer) }!!
-                    val pointNumber: Int =
-                        when (val it = pointRepository.getPointLastId(layer.layerId)) {
-                            is Result.Error -> return
-                            is Result.Loading -> return
-                            is Result.Success -> it.data ?: 0
-                        }
+                        folder!!.layers[0]
+                    val pointNumber: Int = 0
+//                        when (val it = pointRepository.getPointLastId(layer.layerId)) {
+//                            is Result.Error -> return
+//                            is Result.Loading -> return
+//                            is Result.Success -> it.data ?: 0
+//                        }
                     viewModelScope.launch {
                         pointRepository.addPoint(
                             Point(

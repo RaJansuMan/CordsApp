@@ -28,81 +28,88 @@ fun AddPointScreen(
     navController: NavHostController? = null,
     viewModel: AddPointViewModel
 ) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(color = MaterialTheme.colorScheme.background),
-        verticalArrangement = Arrangement.spacedBy(15.dp)
-    ) {
-        CustomTitleBar(title = "Add Point") {
-            navController?.navigate(Route.HomeScreen.route)
-        }
+    viewModel.apply {
         Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .background(color = MaterialTheme.colorScheme.background)
-                .padding(horizontal = 18.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
-        )
-        {
-            CustomOutlinedTextField(
-                value = viewModel.state.pointNo,
-                placeholder = "Point No",
-                keyboardType = KeyboardType.Number
-            ) {
-                viewModel.state.pointNo = it
+                .fillMaxSize()
+                .background(color = MaterialTheme.colorScheme.background),
+            verticalArrangement = Arrangement.spacedBy(15.dp)
+        ) {
+            CustomTitleBar(title = "Add Point") {
+                navController?.navigate(Route.HomeScreen.route)
             }
-            CustomOutlinedTextField(
-                value = viewModel.state.description,
-                placeholder = "Point Description",
-                keyboardType = KeyboardType.Number
-            ) {
-                viewModel.state.description = it
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(color = MaterialTheme.colorScheme.background)
+                    .padding(horizontal = 18.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            )
+            {
+                CustomOutlinedTextField(
+                    value = state.pointNo,
+                    placeholder = "Point No",
+                    keyboardType = KeyboardType.Number
+                ) {
+                    state = state.copy(pointNo = it)
+                }
+                CustomOutlinedTextField(
+                    value = state.description,
+                    placeholder = "Point Description",
+                    keyboardType = KeyboardType.Number
+                ) {
+                    state = state.copy(description = it)
+                }
+                CustomDropdownSpinner(
+                    title = "Layer",
+                    items = state.layerList,
+                    selectedItem = state.selectedLayer
+                ) {
+                    state = state.copy(
+                        selectedLayer = it
+                    )
+                }
+                CustomDropdownSpinner(
+                    title = "Coordinate System",
+                    items = listOf("WGS-84", "UTM")
+                ) {
+                    state = state.copy(
+                        coordinateSystemType = CoordinateSystemType.fromCode(it)
+                            ?: CoordinateSystemType.WGS84
+                    )
+                }
+                if (state.coordinateSystemType == CoordinateSystemType.UTM) {
+                    UTMAddPoint(viewModel = this@apply)
+                } else {
+                    WGSAddPoint(viewModel = viewModel)
+                }
+                CustomDropdownSpinner(
+                    title = "Elevation Type",
+                    items = listOf("Ellipsoidal", "EGM-96", "EGM-08")
+                ) {
+                    state = state.copy(
+                        elevationType =
+                        ElevationType.fromCode(it) ?: ElevationType.ELLIPSOIDAL
+                    )
+                }
+                CustomOutlinedTextField(
+                    value = state.elevation,
+                    placeholder = "Altitude",
+                    keyboardType = KeyboardType.Number
+                ) {
+                    state = state.copy(elevation = it)
+                }
+                ButtonProgressBar(
+                    modifier = Modifier.align(Alignment.CenterHorizontally),
+                    text = "ADD POINT",
+                    isProgress = viewModel.state.isProgress
+                ) {
+                    state = state.copy(isProgress = true)
+                    viewModel.onEvent(AddPointScreenEvents.AddPoint)
+                }
             }
-            CustomDropdownSpinner(
-                title = "Layer",
-                items = viewModel.state.layerList,
-                selectedItem = viewModel.state.selectedLayer
-            ) {
-                viewModel.state = viewModel.state.copy(
-                    selectedLayer = it
-                )
-            }
-            CustomDropdownSpinner(title = "Coordinate System", items = listOf("WGS-84", "UTM")) {
-                viewModel.state = viewModel.state.copy(
-                    coordinateSystemType = CoordinateSystemType.fromCode(it)
-                        ?: CoordinateSystemType.WGS84
-                )
-            }
-            if (viewModel.state.coordinateSystemType == CoordinateSystemType.UTM) {
-                UTMAddPoint(state = viewModel.state)
-            } else {
-                WGSAddPoint(state = viewModel.state)
-            }
-            CustomDropdownSpinner(
-                title = "Elevation Type",
-                items = listOf("Ellipsoidal", "EGM-96", "EGM-08")
-            ) {
-                viewModel.state.elevationType =
-                    ElevationType.fromCode(it) ?: ElevationType.ELLIPSOIDAL
-            }
-            CustomOutlinedTextField(
-                value = viewModel.state.elevation,
-                placeholder = "Altitude",
-                keyboardType = KeyboardType.Number
-            ) {
-                viewModel.state.elevation = it
-            }
-            ButtonProgressBar(
-                modifier = Modifier.align(Alignment.CenterHorizontally),
-                text = "ADD POINT",
-                isProgress = viewModel.state.isProgress
-            ) {
-                viewModel.state.isProgress = true
-                viewModel.onEvent(AddPointScreenEvents.AddPoint)
-            }
-        }
 
+        }
     }
 }
 
