@@ -19,9 +19,9 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.IconButton
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.KeyboardArrowLeft
-import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -52,6 +52,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.selfproject.cordsapp.R
+import com.selfproject.cordsapp.presentation.locate.LocateScreenEvents
 import com.selfproject.cordsapp.presentation.locate.LocateViewModel
 import com.selfproject.cordsapp.presentation.navigation.Route
 
@@ -60,7 +61,7 @@ import com.selfproject.cordsapp.presentation.navigation.Route
     ExperimentalMaterial3Api::class
 )
 @Composable
-fun LocateScreen(navController: NavController,viewModel: LocateViewModel) {
+fun LocateScreen(navController: NavController, viewModel: LocateViewModel) {
     val localDensity = LocalDensity.current
     var sheetState by remember { mutableStateOf(BottomSheetState.COLLAPSED) }
     val onSheetStateChanged: (BottomSheetState) -> Unit = { newState ->
@@ -73,44 +74,50 @@ fun LocateScreen(navController: NavController,viewModel: LocateViewModel) {
     var isBottomCardMeasured by remember { mutableStateOf(false) }
 
 
-
-    Box(modifier = Modifier.fillMaxSize()) {
-        MapBoxMap(viewModel = viewModel)
-        ExpandedSearchView(
-            modifier = Modifier
-                .height(48.dp)
-                .padding(end = 8.dp, top = 8.dp)
-                .align(Alignment.TopEnd)
-                .alpha(0.9F),
-            searchDisplay = "",
-            onSearchDisplayChanged = {},
-            onSearchDisplayClosed = {}
-        )
-        if (!isBottomCardMeasured) {
-            BottomCard(
+    viewModel.apply {
+        Box(modifier = Modifier.fillMaxSize()) {
+            MapBoxMap(viewModel = viewModel)
+            ExpandedSearchView(
                 modifier = Modifier
-                    .onGloballyPositioned { coordinates ->
-                        bottomCardHeight =
-                            with(localDensity) { coordinates.size.height.toDp() }
-                        isBottomCardMeasured = true
-                    }
-                    .alpha(0.0F)
-
+                    .height(48.dp)
+                    .padding(end = 8.dp, top = 8.dp)
+                    .align(Alignment.TopEnd)
+                    .alpha(0.9F),
+                searchDisplay = "",
+                onSearchDisplayChanged = {},
+                onSearchDisplayClosed = {
+                    onEvent(LocateScreenEvents.OnPointClick(it))
+                }
             )
-        }
-        if (isBottomCardMeasured) {
-            CustomBottomSheet(
-                modifier = Modifier.align(Alignment.BottomCenter),
-                sheetState = sheetState,
-                fullyExpandedHeight = bottomCardHeight + halfExpandedHeight,
-                halfExpandedHeight = halfExpandedHeight,
-                minHeight = topHeight,
-                onSheetStateChanged = onSheetStateChanged
-            ) {
-                Column {
-                    TopSheet(modifier = Modifier.height(topHeight), navController)
-                    TopHeaderCard(modifier = Modifier.height(halfExpandedHeight - topHeight))
-                    BottomCard()
+            if (!isBottomCardMeasured) {
+                BottomCard(
+                    modifier = Modifier
+                        .onGloballyPositioned { coordinates ->
+                            bottomCardHeight =
+                                with(localDensity) { coordinates.size.height.toDp() }
+                            isBottomCardMeasured = true
+                        }
+                        .alpha(0.0F)
+
+                )
+            }
+            if (isBottomCardMeasured && state.clickedPoint != null) {
+                CustomBottomSheet(
+                    modifier = Modifier.align(Alignment.BottomCenter),
+                    sheetState = sheetState,
+                    fullyExpandedHeight = bottomCardHeight + halfExpandedHeight,
+                    halfExpandedHeight = halfExpandedHeight,
+                    minHeight = topHeight,
+                    onSheetStateChanged = onSheetStateChanged
+                ) {
+                    Column {
+                        TopSheet(modifier = Modifier.height(topHeight), navController)
+                        TopHeaderCard(
+                            modifier = Modifier.height(halfExpandedHeight - topHeight),
+                            viewModel = this@apply
+                        )
+                        BottomCard(viewModel = this@apply)
+                    }
                 }
             }
         }
@@ -170,7 +177,7 @@ fun TopSheet(modifier: Modifier = Modifier, navController: NavController) {
 }
 
 @Composable
-fun TopHeaderCard(modifier: Modifier = Modifier) {
+fun TopHeaderCard(modifier: Modifier = Modifier, viewModel: LocateViewModel) {
     Card(
         modifier = modifier
             .fillMaxWidth(),
@@ -189,9 +196,9 @@ fun TopHeaderCard(modifier: Modifier = Modifier) {
                 .padding(0.dp)
                 .background(shape = RectangleShape, color = Color.Transparent)
                 .align(AbsoluteAlignment.CenterLeft),
-                onClick = { /*TODO*/ }) {
+                onClick = { viewModel.onEvent(LocateScreenEvents.OnLeftClick) }) {
                 Icon(
-                    Icons.Filled.KeyboardArrowLeft,
+                    Icons.AutoMirrored.Filled.KeyboardArrowLeft,
                     contentDescription = "Locate", tint = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
@@ -201,7 +208,7 @@ fun TopHeaderCard(modifier: Modifier = Modifier) {
                 .padding(0.dp)
                 .background(shape = RectangleShape, color = Color.Transparent)
                 .align(Alignment.TopCenter),
-                onClick = { /*TODO*/ }) {
+                onClick = { viewModel.onEvent(LocateScreenEvents.OnUpClick) }) {
                 Icon(
                     Icons.Filled.KeyboardArrowUp,
                     contentDescription = "Locate", tint = MaterialTheme.colorScheme.onSurfaceVariant
@@ -213,15 +220,15 @@ fun TopHeaderCard(modifier: Modifier = Modifier) {
                 .padding(0.dp)
                 .background(shape = RectangleShape, color = Color.Transparent)
                 .align(AbsoluteAlignment.CenterRight),
-                onClick = { /*TODO*/ }) {
+                onClick = { viewModel.onEvent(LocateScreenEvents.OnRightClick) }) {
                 Icon(
-                    Icons.Filled.KeyboardArrowRight,
+                    Icons.AutoMirrored.Filled.KeyboardArrowRight,
                     contentDescription = "Locate", tint = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
 
             Text(
-                text = "Point no : 0",
+                text = "Point no : ${viewModel.state.clickedPoint?.pointNumber}",
                 modifier = Modifier.align(Alignment.Center),
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 fontWeight = FontWeight.Bold,
@@ -233,59 +240,73 @@ fun TopHeaderCard(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun BottomCard(modifier: Modifier = Modifier) {
-    Card(
-        modifier = modifier
-            .fillMaxWidth(),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-        shape = RoundedCornerShape(
-            0.dp
-        ),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
-    ) {
-        Column {
-            SectionHeader(modifier = Modifier.padding(top = 5.dp), value = "Description")
-            Text(
-                modifier = Modifier.padding(start = 20.dp, top = 8.dp),
-                text = "NEW Point",
-                textAlign = TextAlign.Justify, color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-            SectionHeader(modifier = Modifier.padding(top = 5.dp), value = "WGS Coordinates")
-            TextRow(modifier = Modifier.fillMaxWidth(), field = "Latitude   :", value = "1.4588537")
-            TextRow(modifier = Modifier.fillMaxWidth(), field = "Longitude :", value = "1.4588537")
+fun BottomCard(modifier: Modifier = Modifier, viewModel: LocateViewModel? = null) {
+    viewModel?.state?.clickedPoint.let { point ->
+        Card(
+            modifier = modifier
+                .fillMaxWidth(),
+            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+            shape = RoundedCornerShape(
+                0.dp
+            ),
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
+        ) {
+            Column {
+                SectionHeader(modifier = Modifier.padding(top = 5.dp), value = "Description")
+                Text(
+                    modifier = Modifier.padding(start = 20.dp, top = 8.dp),
+                    text = point?.description ?: "",
+                    textAlign = TextAlign.Justify,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                SectionHeader(modifier = Modifier.padding(top = 5.dp), value = "WGS Coordinates")
+                TextRow(
+                    modifier = Modifier.fillMaxWidth(),
+                    field = "Latitude   :",
+                    value = point?.wgs84Coords?.lat?.toString() ?: "0.0"
+                )
+                TextRow(
+                    modifier = Modifier.fillMaxWidth(),
+                    field = "Longitude :",
+                    value = point?.wgs84Coords?.lng?.toString() ?: "0.0"
+                )
 //            SectionHeader(modifier= Modifier.padding(top = 5.dp),value = "UTM Coordinates")
 //            TextRow(modifier=Modifier.fillMaxWidth(), field = "Easting    :", value = "1.4588537")
 //            TextRow(modifier=Modifier.fillMaxWidth(), field = "Northing   :", value = "1.4588537")
 //            TextRow(modifier=Modifier.fillMaxWidth(), field = "UTM Zone   :", value = "1.4588537")
 //            TextRow(modifier=Modifier.fillMaxWidth(), field = "UTM Letter   :", value = "1.4588537")
-            SectionHeader(modifier = Modifier.padding(top = 5.dp), value = "Elevation")
-            TextRow(
-                modifier = Modifier.fillMaxWidth(),
-                field = "Ellipsoidal   :",
-                value = "1.4588537"
-            )
+                SectionHeader(modifier = Modifier.padding(top = 5.dp), value = "Elevation")
+                TextRow(
+                    modifier = Modifier.fillMaxWidth(),
+                    field = "Ellipsoidal   :",
+                    value = point?.elevation?.ellipsoidal?.toString() ?: "0.0"
+                )
 //            TextRow(modifier=Modifier.fillMaxWidth(), field = "   :", value = "1.4588537")
 //            TextRow(modifier=Modifier.fillMaxWidth(), field = "UTM Letter   :", value = "1.4588537")
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 8.dp), horizontalArrangement = Arrangement.SpaceAround
-            ) {
-                Button(
-                    onClick = { },
-                    shape = RoundedCornerShape(8.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = Color.Red)
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 8.dp), horizontalArrangement = Arrangement.SpaceAround
                 ) {
-                    Text(text = "DELETE POINT", style = TextStyle(fontWeight = FontWeight.Bold))
+                    Button(
+                        onClick = { viewModel?.onEvent(LocateScreenEvents.OnDeletePoint) },
+                        shape = RoundedCornerShape(8.dp),
+                        colors = ButtonDefaults.buttonColors(containerColor = Color.Red)
+                    ) {
+                        Text(text = "DELETE POINT", style = TextStyle(fontWeight = FontWeight.Bold))
+                    }
+                    Button(
+                        onClick = { viewModel?.onEvent(LocateScreenEvents.OnPointDetails) },
+                        shape = RoundedCornerShape(8.dp) // Rounded corners
+                    ) {
+                        Text(
+                            text = "POINT DETAILS",
+                            style = TextStyle(fontWeight = FontWeight.Bold)
+                        )
+                    }
                 }
-                Button(
-                    onClick = { },
-                    shape = RoundedCornerShape(8.dp) // Rounded corners
-                ) {
-                    Text(text = "POINT DETAILS", style = TextStyle(fontWeight = FontWeight.Bold))
-                }
-            }
 
+            }
         }
     }
 }

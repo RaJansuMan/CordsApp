@@ -84,7 +84,7 @@ fun Point.pointToPointQuery(folderId: Int): PointEntity {
 
 fun PointEntity.toPoint(): Point {
     return Point(
-        pointId = pointNo,
+        pointId = pointId,
         cordsType = CoordinateSystemType.ALL,
         wgs84Coords = WGS84Coordinate(lat, lon),
         utmCoordinate = UTMCoordinate(east, north, zoneNumber, zoneLetter),

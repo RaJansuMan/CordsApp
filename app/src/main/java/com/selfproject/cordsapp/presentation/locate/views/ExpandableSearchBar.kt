@@ -11,7 +11,7 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowForward
+import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -34,6 +34,7 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -55,8 +56,8 @@ fun SearchIcon(iconTint: Color = MaterialTheme.colorScheme.onSurfaceVariant) {
 fun ExpandedSearchView(
     modifier: Modifier = Modifier,
     searchDisplay: String,
-    onSearchDisplayChanged: (String) -> Unit,
-    onSearchDisplayClosed: () -> Unit,
+    onSearchDisplayChanged: (Int) -> Unit,
+    onSearchDisplayClosed: (Int) -> Unit,
     initialState: BarState = BarState.COLLAPSED,
     tint: Color = Color.White,
     backgroundColor: Color = Color.Gray
@@ -100,9 +101,7 @@ fun ExpandedSearchView(
         verticalAlignment = Alignment.CenterVertically
     ) {
         IconButton(onClick = {
-            if (barState == BarState.EXPANDED) {
-
-            } else {
+            if (barState != BarState.EXPANDED) {
                 barState = BarState.EXPANDED
             }
         }) {
@@ -112,17 +111,18 @@ fun ExpandedSearchView(
             value = textFieldValue,
             onValueChange = {
                 textFieldValue = it
-                onSearchDisplayChanged(it.text)
+                onSearchDisplayChanged(it.text.toInt())
             },
             modifier = Modifier
                 .focusRequester(textFieldFocusRequester)
                 .background(color = backgroundColor)
                 .padding(4.dp)
-                .width(210.dp), // Optional: add padding inside the text field
+                .width(210.dp),
             textStyle = TextStyle(color = tint),
             keyboardOptions = KeyboardOptions(
-                imeAction = ImeAction.Done
+                imeAction = ImeAction.Done, keyboardType = KeyboardType.Number
             ),
+
             keyboardActions = KeyboardActions(
                 onDone = {
                     barState = BarState.COLLAPSED
@@ -135,15 +135,15 @@ fun ExpandedSearchView(
                         color = tint.copy(alpha = 0.5f)
                     )
                 }
-                innerTextField() // Draw the actual text field content
+                innerTextField()
             }
         )
         IconButton(onClick = {
             barState = BarState.COLLAPSED
-            onSearchDisplayClosed()
+            onSearchDisplayClosed(textFieldValue.text.toInt())
         }) {
             Icon(
-                Icons.Filled.ArrowForward,
+                Icons.AutoMirrored.Filled.ArrowForward,
                 contentDescription = "Locate", tint = tint,
 
             )

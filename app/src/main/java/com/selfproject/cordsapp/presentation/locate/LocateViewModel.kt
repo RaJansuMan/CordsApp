@@ -1,22 +1,18 @@
 package com.selfproject.cordsapp.presentation.locate
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.selfproject.cordsapp.domain.model.Folder
 import com.selfproject.cordsapp.domain.model.FolderWithPoint
 import com.selfproject.cordsapp.domain.model.Result
-import com.selfproject.cordsapp.domain.model.coordinateModel.CoordinateSystemType
-import com.selfproject.cordsapp.domain.model.coordinateModel.Elevation
-import com.selfproject.cordsapp.domain.model.coordinateModel.ElevationType
-import com.selfproject.cordsapp.domain.model.coordinateModel.Point
-import com.selfproject.cordsapp.domain.model.coordinateModel.WGS84Coordinate
 import com.selfproject.cordsapp.domain.repository.FileRepository
 import com.selfproject.cordsapp.domain.repository.PointRepository
 import com.selfproject.cordsapp.utils.Constants
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
 import java.sql.Date
@@ -28,9 +24,7 @@ class LocateViewModel @Inject constructor(
     private val fileRepository: FileRepository
 ) :
     ViewModel() {
-
-    private val _dynamicLayers = MutableStateFlow<MutableMap<String, LayerData>>(mutableMapOf())
-    val dynamicLayers: StateFlow<Map<String, LayerData>> = _dynamicLayers
+    var state by mutableStateOf(LocateScreenState())
 
     init {
         viewModelScope.launch {
@@ -51,23 +45,32 @@ class LocateViewModel @Inject constructor(
 
     fun onEvent(event: LocateScreenEvents) {
         when (event) {
-            is LocateScreenEvents.OnPointClick -> TODO()
+            is LocateScreenEvents.OnPointClick -> {
+                if (event.pointId == null) {
+                    state = state.copy(clickedPoint = null)
+                } else if (event.layerId == null) {
+                    state.folderWithPoint?.pointsWithLayer?.values?.forEach {
+                        if (it.keys.contains(event.pointId)) {
+                            state = state.copy(clickedPoint = it[event.pointId])
+                        }
+                    }
+                } else {
+                    if (state.folderWithPoint?.pointsWithLayer?.get(event.layerId)
+                            ?.containsKey(event.pointId) == true
+                    ) {
+                        state = state.copy(
+                            clickedPoint = state.folderWithPoint?.pointsWithLayer?.get(event.layerId)!![event.pointId]
+                        )
+                    }
+                }
+            }
+
+            LocateScreenEvents.OnDeletePoint -> TODO()
+            LocateScreenEvents.OnLeftClick -> TODO()
+            LocateScreenEvents.OnPointDetails -> TODO()
+            LocateScreenEvents.OnRightClick -> TODO()
+            LocateScreenEvents.OnUpClick -> TODO()
         }
-    }
-
-
-    private fun FolderWithPoint.convertFolderWithPointToLayerDataMap(): MutableMap<String, LayerData> {
-        val layersById = folder.layers.associateBy { it.layerId }
-
-        return pointsWithLayer.mapValues { (layerId, pointsMap) ->
-            val layer = layersById[layerId]
-                ?: throw IllegalArgumentException("Layer with ID $layerId not found in folder")
-
-            LayerData(
-                layer = layer,
-                points = pointsMap.values.toMutableList()
-            )
-        }.toMutableMap()
     }
 
     private suspend fun createDefaultFolder() {
@@ -97,30 +100,11 @@ class LocateViewModel @Inject constructor(
                     is Result.Loading -> {}
                     is Result.Success -> {
                         pointResult.data?.let {
-                            _dynamicLayers.value = it.convertFolderWithPointToLayerDataMap()
-                            _dynamicLayers.value = _dynamicLayers.value.apply {
-                                put(
-                                    Constants().defaultLayer.layerId,
-                                    LayerData(
-                                        Constants().defaultLayer, mutableListOf(
-                                            Point(
-                                                pointId = 0,
-                                                CoordinateSystemType.ALL,
-                                                wgs84Coords = WGS84Coordinate(12.971599, 77.594566),
-                                                elevation = Elevation(
-                                                    elevationType = ElevationType.ALL,
-                                                    ellipsoidal = 0.0
-                                                ),
-                                                description = "",
-                                                layer = Constants().defaultLayer,
-                                                pointNumber = 0,
-                                                createdOn = Date(System.currentTimeMillis()),
-                                                folderId = 0
-                                            )
-                                        )
-                                    )
-                                )
-                            }
+                            state = state.copy(
+                                dynamicLayers = it.convertFolderWithPointToLayerDataMap(),
+                                folderWithPoint = it,
+                                clickedPoint = it.pointsWithLayer.values.lastOrNull()?.values?.lastOrNull()
+                            )
                         }
                     }
                 }
@@ -128,4 +112,19 @@ class LocateViewModel @Inject constructor(
 
 
     }
+
+    private fun FolderWithPoint.convertFolderWithPointToLayerDataMap(): MutableMap<String, LayerData> {
+        val layersById = folder.layers.associateBy { it.layerId }
+
+        return pointsWithLayer.mapValues { (layerId, pointsMap) ->
+            val layer = layersById[layerId]
+                ?: throw IllegalArgumentException("Layer with ID $layerId not found in folder")
+
+            LayerData(
+                layer = layer,
+                points = pointsMap.values.toMutableList()
+            )
+        }.toMutableMap()
+    }
+
 }
