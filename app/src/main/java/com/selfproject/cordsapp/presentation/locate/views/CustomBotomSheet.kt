@@ -38,6 +38,7 @@ fun CustomBottomSheet(
     fullyExpandedHeight: Dp,
     halfExpandedHeight: Dp,
     minHeight: Dp,
+    enableDrag:Boolean = true,
     onSheetStateChanged: (BottomSheetState) -> Unit,
     sheetContent: @Composable () -> Unit
 ) {
@@ -71,30 +72,34 @@ fun CustomBottomSheet(
                 detectDragGestures(
                     onDragStart = {},
                     onDragEnd = {
-                        scope.launch {
-                            if (sheetHeight.value > halfHeightPx && sheetHeight.value < fullHeightPx) {
-                                if (_sheetState == BottomSheetState.COLLAPSED)
-                                    onSheetStateChanged(BottomSheetState.EXPANDED)
-                                else
-                                    onSheetStateChanged(BottomSheetState.COLLAPSED)
-                            }
-                            if (sheetHeight.value < halfHeightPx) {
-                                if (_sheetState == BottomSheetState.COLLAPSED)
-                                    onSheetStateChanged(BottomSheetState.HIDDEN)
-                                else
-                                    onSheetStateChanged(BottomSheetState.COLLAPSED)
+                        if(enableDrag) {
+                            scope.launch {
+                                if (sheetHeight.value > halfHeightPx && sheetHeight.value < fullHeightPx) {
+                                    if (_sheetState == BottomSheetState.COLLAPSED)
+                                        onSheetStateChanged(BottomSheetState.EXPANDED)
+                                    else
+                                        onSheetStateChanged(BottomSheetState.COLLAPSED)
+                                }
+                                if (sheetHeight.value < halfHeightPx) {
+                                    if (_sheetState == BottomSheetState.COLLAPSED)
+                                        onSheetStateChanged(BottomSheetState.HIDDEN)
+                                    else
+                                        onSheetStateChanged(BottomSheetState.COLLAPSED)
+                                }
                             }
                         }
                     },
                     onDragCancel = {}
                 ) { change, dragAmount ->
-                    change.consume()
-                    scope.launch {
-                        val targetValue = sheetHeight.value - dragAmount.y
-                        if (targetValue > minHeightPx && targetValue < fullHeightPx) {
-                            sheetHeight.snapTo(targetValue)
-                        }
+                    if (enableDrag) {
+                        change.consume()
+                        scope.launch {
+                            val targetValue = sheetHeight.value - dragAmount.y
+                            if (targetValue > minHeightPx && targetValue < fullHeightPx) {
+                                sheetHeight.snapTo(targetValue)
+                            }
 
+                        }
                     }
                 }
             }

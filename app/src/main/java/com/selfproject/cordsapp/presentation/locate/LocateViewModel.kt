@@ -13,6 +13,7 @@ import com.selfproject.cordsapp.domain.repository.PointRepository
 import com.selfproject.cordsapp.utils.Constants
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
 import java.sql.Date
@@ -32,8 +33,8 @@ class LocateViewModel @Inject constructor(
                 .flowOn(Dispatchers.IO)
                 .collect { result ->
                     when (result) {
-                        is Result.Error -> {}
-                        is Result.Loading -> {}
+                        is Result.Error -> state = state.copy(toastMessage = result.message)
+                        is Result.Loading -> state = state.copy(isProgress = result.isLoading)
                         is Result.Success -> result.data?.let {
                             fetchPointsForDynamicLayer()
                         } ?: createDefaultFolder()
@@ -65,11 +66,43 @@ class LocateViewModel @Inject constructor(
                 }
             }
 
-            LocateScreenEvents.OnDeletePoint -> TODO()
+            LocateScreenEvents.OnDeletePoint -> {
+                viewModelScope.launch {
+                    pointRepository.deletePoint(state.clickedPoint!!).flowOn(Dispatchers.IO)
+                        .collectLatest {
+                            when (it) {
+                                is Result.Error -> {
+                                    state = state.copy(toastMessage = it.message)
+                                }
+
+                                is Result.Loading -> {
+                                    state = state.copy(isProgress = it.isLoading)
+                                }
+
+                                is Result.Success -> {
+                                    val point = state.clickedPoint
+                                    point?.pointId?.let { it1 ->
+                                        state.folderWithPoint?.pointsWithLayer?.get(point.layer.layerId)
+                                            ?.remove(it1)
+                                    }
+                                    state.dynamicLayers[point?.layer?.layerId]?.points?.remove(point)
+                                    state = state.copy(
+                                        clickedPoint = null,
+                                        toastMessage = "Point deleted Successfully"
+                                    )
+                                }
+                            }
+                        }
+                }
+            }
+
             LocateScreenEvents.OnLeftClick -> TODO()
             LocateScreenEvents.OnPointDetails -> TODO()
             LocateScreenEvents.OnRightClick -> TODO()
             LocateScreenEvents.OnUpClick -> TODO()
+            LocateScreenEvents.ToastShowed -> {
+                state = state.copy(toastMessage = null)
+            }
         }
     }
 
@@ -84,8 +117,8 @@ class LocateViewModel @Inject constructor(
             )
         ).collect { addFolderResult ->
             when (addFolderResult) {
-                is Result.Error -> {}
-                is Result.Loading -> {}
+                is Result.Error -> state = state.copy(toastMessage = addFolderResult.message)
+                is Result.Loading -> state = state.copy(isProgress = addFolderResult.isLoading)
                 is Result.Success -> fetchPointsForDynamicLayer()
             }
         }
@@ -96,8 +129,8 @@ class LocateViewModel @Inject constructor(
             .flowOn(Dispatchers.IO)
             .collect { pointResult ->
                 when (pointResult) {
-                    is Result.Error -> {}
-                    is Result.Loading -> {}
+                    is Result.Error -> state = state.copy(toastMessage = pointResult.message)
+                    is Result.Loading -> state = state.copy(isProgress = pointResult.isLoading)
                     is Result.Success -> {
                         pointResult.data?.let {
                             state = state.copy(
@@ -105,6 +138,9 @@ class LocateViewModel @Inject constructor(
                                 folderWithPoint = it,
                                 clickedPoint = it.pointsWithLayer.values.lastOrNull()?.values?.lastOrNull()
                             )
+                        }
+                        if (pointResult.data == null) {
+                            state = state.copy(toastMessage = "No point found")
                         }
                     }
                 }

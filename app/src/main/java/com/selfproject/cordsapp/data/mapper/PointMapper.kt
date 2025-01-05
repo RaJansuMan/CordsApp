@@ -56,7 +56,7 @@ fun Point.toPointQuery(): PointQuery {
 }
 
 
-fun Point.pointToPointQuery(folderId: Int): PointEntity {
+fun Point.pointToPointQuery(): PointEntity {
     if (cordsType != CoordinateSystemType.ALL) {
         throw IllegalArgumentException("Coords type should be all")
     }
@@ -64,6 +64,7 @@ fun Point.pointToPointQuery(folderId: Int): PointEntity {
         throw IllegalArgumentException("Elevation type should be all")
     }
     return PointEntity(
+        pointId = pointId,
         folderId = folderId,
         lat = wgs84Coords!!.lat,
         lon = wgs84Coords.lng,
@@ -76,7 +77,7 @@ fun Point.pointToPointQuery(folderId: Int): PointEntity {
         eleEgm96 = elevation.egm96!!,
         description = description,
         layer = layer,
-        createdOn = createdOn!!,
+        createdOn = createdOn,
         pointNo = pointNumber
     )
 

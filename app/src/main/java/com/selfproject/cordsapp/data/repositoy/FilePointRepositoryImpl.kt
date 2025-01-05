@@ -1,6 +1,7 @@
 package com.selfproject.cordsapp.data.repositoy
 
 import com.selfproject.cordsapp.data.local.AppDatabase
+import com.selfproject.cordsapp.data.mapper.pointToPointQuery
 import com.selfproject.cordsapp.data.mapper.toApiResponse
 import com.selfproject.cordsapp.data.mapper.toFolder
 import com.selfproject.cordsapp.data.mapper.toFolderEntity
@@ -48,7 +49,7 @@ class FilePointRepositoryImpl @Inject constructor(
                     }
                 }
             } catch (e: Exception) {
-                emit(Result.Error(e.message ?: "Unknown error"))
+                emit(Result.Error("Unable to connect to server"))
                 null
             }
             response?.let { pointEntity ->
@@ -66,7 +67,13 @@ class FilePointRepositoryImpl @Inject constructor(
     }
 
     override suspend fun deletePoint(point: Point): Flow<Result<Void>> {
-        TODO("Not yet implemented")
+        return flow {
+            emit(Result.Loading())
+            pointDao.deletePoint(point.pointToPointQuery())
+            emit(Result.Success(data = null))
+            point.pointId?.let { pointCache[point.layer.layerId]?.remove(it) }
+            emit(Result.Loading(false))
+        }
     }
 
     override suspend fun getAllPoint(folderId: Int): Flow<Result<FolderWithPoint>> {
@@ -123,7 +130,7 @@ class FilePointRepositoryImpl @Inject constructor(
     override fun getPointLastId(layerId: String): Result<Int> {
         return if (pointCache.containsKey(layerId)) {
             Result.Success(
-                pointCache[layerId]?.keys?.maxOfOrNull { it }?.let { it + 1 } ?: 0
+                pointCache[layerId]?.values?.lastOrNull()?.pointNumber?.let { it + 1 } ?: 0
             )
         } else
             Result.Error("layer not found")

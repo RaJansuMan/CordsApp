@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.selfproject.cordsapp.domain.model.InputForm
 import com.selfproject.cordsapp.domain.model.Result
 import com.selfproject.cordsapp.domain.model.coordinateModel.CoordinateSystemType
 import com.selfproject.cordsapp.domain.model.coordinateModel.Elevation
@@ -25,8 +26,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AddPointViewModel @Inject constructor(
-    val pointRepository: PointRepository,
-    val fileRepository: FileRepository
+    private val pointRepository: PointRepository,
+    private val fileRepository: FileRepository
 ) :
     ViewModel() {
 
@@ -38,7 +39,7 @@ class AddPointViewModel @Inject constructor(
                 .collectLatest { result ->
                     when (result) {
                         is Result.Error -> {
-
+                            state = state.copy(toastMessage = result.message)
                         }
 
                         is Result.Loading -> {
@@ -48,10 +49,25 @@ class AddPointViewModel @Inject constructor(
                         is Result.Success -> {
                             result.data?.let { folder ->
                                 val layerList = folder.layers.map { "${it.name} (${it.layerId})" }
+                                var lastPointNumber = 0
+                                layerList.firstOrNull()?.let {
+                                    when (val resultId =
+                                        pointRepository.getPointLastId(extractLayerId(it))) {
+                                        is Result.Error -> state =
+                                            state.copy(toastMessage = resultId.message)
+
+                                        is Result.Loading -> state =
+                                            state.copy(folderFetchProgress = resultId.isLoading)
+
+                                        is Result.Success -> lastPointNumber = resultId.data!!
+                                    }
+                                }
                                 state = state.copy(
                                     folder = folder, layerList = layerList,
-                                    selectedLayer = layerList.firstOrNull() ?: ""
+                                    selectedLayer = layerList.firstOrNull() ?: "",
+                                    pointNo = InputForm(input = lastPointNumber.toString())
                                 )
+
                             }
                         }
                     }
@@ -124,12 +140,7 @@ class AddPointViewModel @Inject constructor(
                     }
                     val layer =
                         folder!!.layers[0]
-                    val pointNumber: Int = 0
-//                        when (val it = pointRepository.getPointLastId(layer.layerId)) {
-//                            is Result.Error -> return
-//                            is Result.Loading -> return
-//                            is Result.Success -> it.data ?: 0
-//                        }
+                    val pointNumber = pointNo.input.toInt()
                     viewModelScope.launch {
                         pointRepository.addPoint(
                             Point(
@@ -147,21 +158,41 @@ class AddPointViewModel @Inject constructor(
                                 pointId = null
                             )
                         ).flowOn(Dispatchers.IO).collectLatest {
-                            when (it) {
-                                is Result.Error -> {}
-                                is Result.Loading -> {}
-                                is Result.Success -> {}
+                            state = when (it) {
+                                is Result.Error -> state.copy(toastMessage = it.message)
+                                is Result.Loading -> state.copy(isProgress = it.isLoading)
+                                is Result.Success -> {
+                                    when (val resultId =
+                                        pointRepository.getPointLastId(extractLayerId(state.selectedLayer))) {
+                                        is Result.Error -> state.copy(toastMessage = resultId.message)
+                                        is Result.Loading -> state.copy(folderFetchProgress = resultId.isLoading)
+                                        is Result.Success -> state.copy(
+                                            pointNo = InputForm(input = resultId.data!!.toString()),
+                                            toastMessage = "Point Added"
+                                        )
+                                    }
+                                }
                             }
                         }
                     }
                 }
             }
+
+            AddPointScreenEvents.OnBackClicked -> {}
+            AddPointScreenEvents.ToastShowed -> {
+                state = state.copy(toastMessage = null)
+            }
         }
     }
 
-    private fun extractLayerId(input: String): String? {
-        val regex = """\((\d+)\)$""".toRegex()
-        return regex.find(input)?.groupValues?.get(1)
+    private fun extractLayerId(input: String): String {
+        val startIndex = input.indexOf('(') + 1
+        val endIndex = input.indexOf(')')
+        return if (startIndex in 1..<endIndex) {
+            input.substring(startIndex, endIndex)
+        } else {
+            throw IllegalArgumentException("Invalid input format")
+        }
     }
 
 

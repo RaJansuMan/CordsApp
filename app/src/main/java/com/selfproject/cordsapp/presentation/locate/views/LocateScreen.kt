@@ -1,5 +1,6 @@
 package com.selfproject.cordsapp.presentation.locate.views
 
+import android.widget.Toast
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -27,6 +28,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -43,6 +45,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
@@ -73,50 +76,70 @@ fun LocateScreen(navController: NavController, viewModel: LocateViewModel) {
     var bottomCardHeight by remember { mutableStateOf(0.dp) }
     var isBottomCardMeasured by remember { mutableStateOf(false) }
 
-
     viewModel.apply {
+
+        if (state.toastMessage != null) {
+            Toast.makeText(LocalContext.current, state.toastMessage, Toast.LENGTH_SHORT).show()
+            onEvent(LocateScreenEvents.ToastShowed)
+        }
+        if (state.clickedPoint == null) {
+            onSheetStateChanged(BottomSheetState.HIDDEN)
+        } else {
+            if (sheetState == BottomSheetState.HIDDEN) {
+                onSheetStateChanged(BottomSheetState.COLLAPSED)
+            }
+        }
+
         Box(modifier = Modifier.fillMaxSize()) {
             MapBoxMap(viewModel = viewModel)
-            ExpandedSearchView(
-                modifier = Modifier
-                    .height(48.dp)
-                    .padding(end = 8.dp, top = 8.dp)
-                    .align(Alignment.TopEnd)
-                    .alpha(0.9F),
-                searchDisplay = "",
-                onSearchDisplayChanged = {},
-                onSearchDisplayClosed = {
-                    onEvent(LocateScreenEvents.OnPointClick(it))
-                }
-            )
-            if (!isBottomCardMeasured) {
-                BottomCard(
-                    modifier = Modifier
-                        .onGloballyPositioned { coordinates ->
-                            bottomCardHeight =
-                                with(localDensity) { coordinates.size.height.toDp() }
-                            isBottomCardMeasured = true
-                        }
-                        .alpha(0.0F)
-
+            if (state.isProgress) {
+                CircularProgressIndicator(
+                    modifier = Modifier.align(Alignment.Center),
+                    color = MaterialTheme.colorScheme.primary
                 )
-            }
-            if (isBottomCardMeasured && state.clickedPoint != null) {
-                CustomBottomSheet(
-                    modifier = Modifier.align(Alignment.BottomCenter),
-                    sheetState = sheetState,
-                    fullyExpandedHeight = bottomCardHeight + halfExpandedHeight,
-                    halfExpandedHeight = halfExpandedHeight,
-                    minHeight = topHeight,
-                    onSheetStateChanged = onSheetStateChanged
-                ) {
-                    Column {
-                        TopSheet(modifier = Modifier.height(topHeight), navController)
-                        TopHeaderCard(
-                            modifier = Modifier.height(halfExpandedHeight - topHeight),
-                            viewModel = this@apply
-                        )
-                        BottomCard(viewModel = this@apply)
+            } else {
+                ExpandedSearchView(
+                    modifier = Modifier
+                        .height(48.dp)
+                        .padding(end = 8.dp, top = 8.dp)
+                        .align(Alignment.TopEnd)
+                        .alpha(0.9F),
+                    searchDisplay = "",
+                    onSearchDisplayChanged = {},
+                    onSearchDisplayClosed = {
+                        onEvent(LocateScreenEvents.OnPointClick(it))
+                    }
+                )
+                if (!isBottomCardMeasured) {
+                    BottomCard(
+                        modifier = Modifier
+                            .onGloballyPositioned { coordinates ->
+                                bottomCardHeight =
+                                    with(localDensity) { coordinates.size.height.toDp() }
+                                isBottomCardMeasured = true
+                            }
+                            .alpha(0.0F)
+
+                    )
+                }
+                if (isBottomCardMeasured) {
+                    CustomBottomSheet(
+                        modifier = Modifier.align(Alignment.BottomCenter),
+                        sheetState = sheetState,
+                        fullyExpandedHeight = bottomCardHeight + halfExpandedHeight,
+                        halfExpandedHeight = halfExpandedHeight,
+                        minHeight = topHeight,
+                        enableDrag = state.clickedPoint != null,
+                        onSheetStateChanged = onSheetStateChanged
+                    ) {
+                        Column {
+                            TopSheet(modifier = Modifier.height(topHeight), navController)
+                            TopHeaderCard(
+                                modifier = Modifier.height(halfExpandedHeight - topHeight),
+                                viewModel = this@apply
+                            )
+                            BottomCard(viewModel = this@apply)
+                        }
                     }
                 }
             }

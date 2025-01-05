@@ -17,6 +17,7 @@ import com.selfproject.cordsapp.domain.model.InputForm
 fun CustomOutlinedTextField(
     modifier: Modifier = Modifier,
     value: InputForm,
+    isEnabled: Boolean = true,
     placeholder: String = "",
     keyboardType: KeyboardType = KeyboardType.Text,
     maxLength: Int = 20,
@@ -35,6 +36,7 @@ fun CustomOutlinedTextField(
         singleLine = true,
         maxLines = 1,
         isError = value.error != null,
+        enabled = isEnabled,
         colors = OutlinedTextFieldDefaults.colors(
             cursorColor = MaterialTheme.colorScheme.onSurfaceVariant,
             focusedBorderColor = MaterialTheme.colorScheme.onSurfaceVariant,

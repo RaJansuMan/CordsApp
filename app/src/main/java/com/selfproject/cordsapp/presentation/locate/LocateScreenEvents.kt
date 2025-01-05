@@ -9,4 +9,5 @@ sealed class LocateScreenEvents {
     data object OnUpClick : LocateScreenEvents()
     data object OnDeletePoint : LocateScreenEvents()
     data object OnPointDetails : LocateScreenEvents()
+    data object ToastShowed : LocateScreenEvents()
 }

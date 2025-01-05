@@ -21,5 +21,7 @@ data class AddPointScreenState(
     var layerList: List<String> = emptyList(),
     var selectedLayer: String = "",
     val folder: Folder? = null,
-    val folderFetchProgress: Boolean = true
+    val folderFetchProgress: Boolean = true,
+    val toastMessage: String? = null,
+    val backClicked: Boolean = false
 )

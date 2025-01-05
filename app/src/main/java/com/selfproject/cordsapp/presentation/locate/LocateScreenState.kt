@@ -6,6 +6,7 @@ import com.selfproject.cordsapp.domain.model.coordinateModel.Point
 data class LocateScreenState(
     val clickedPoint: Point? = null,
     val folderWithPoint: FolderWithPoint? = null,
-//    val folder: Folder
+    val isProgress: Boolean = false,
+    val toastMessage: String? = null,
     val dynamicLayers: MutableMap<String, LayerData> = mutableMapOf()
 )
