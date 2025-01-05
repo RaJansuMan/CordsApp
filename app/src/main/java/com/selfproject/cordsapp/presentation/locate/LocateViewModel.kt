@@ -96,10 +96,62 @@ class LocateViewModel @Inject constructor(
                 }
             }
 
-            LocateScreenEvents.OnLeftClick -> TODO()
-            LocateScreenEvents.OnPointDetails -> TODO()
-            LocateScreenEvents.OnRightClick -> TODO()
-            LocateScreenEvents.OnUpClick -> TODO()
+            LocateScreenEvents.OnLeftClick -> {
+                val pointMap =
+                    state.folderWithPoint?.pointsWithLayer?.get(state.clickedPoint?.layer?.layerId)
+                val minId = pointMap?.keys?.min() ?: 0
+                state.apply {
+                    clickedPoint?.let {
+                        if (it.pointId!! - 1 < 0) {
+                            state = state.copy(toastMessage = "No previous point found")
+                            return
+                        }
+                        for (i in it.pointId - 1 downTo (0)) {
+                            if (pointMap?.containsKey(i) == true) {
+                                state = state.copy(clickedPoint = pointMap[i])
+                                return
+                            }
+                            if (i == 0 || i <= minId) {
+                                state = state.copy(toastMessage = "No previous point found")
+                                return
+                            }
+                        }
+                    }
+                }
+            }
+
+            LocateScreenEvents.OnPointDetails -> {
+
+            }
+
+            LocateScreenEvents.OnRightClick -> {
+                val pointMap =
+                    state.folderWithPoint?.pointsWithLayer?.get(state.clickedPoint?.layer?.layerId)
+                val maxId = pointMap?.keys?.max() ?: 0
+                state.apply {
+
+                    clickedPoint?.let {
+                        if (it.pointId!! + 1 > maxId) {
+                            state = state.copy(toastMessage = "No next point found")
+                            return
+                        }
+                        for (i in it.pointId + 1..maxId) {
+                            if (pointMap?.containsKey(i) == true) {
+                                state = state.copy(clickedPoint = pointMap[i])
+                                return
+                            }
+                            if (i == 0 || i >= maxId) {
+                                state = state.copy(toastMessage = "No next point found")
+                            }
+                        }
+                    }
+                }
+            }
+
+            LocateScreenEvents.OnUpClick -> {
+
+            }
+
             LocateScreenEvents.ToastShowed -> {
                 state = state.copy(toastMessage = null)
             }
