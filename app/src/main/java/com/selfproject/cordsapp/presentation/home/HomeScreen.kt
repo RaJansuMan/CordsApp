@@ -4,9 +4,6 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.material3.Tab
-import androidx.compose.material3.TabRow
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -46,30 +43,30 @@ fun HomeScreen(
 
 
     Column(modifier = modifier) {
-        TabRow(
-            selectedTabIndex = selectedItem
-        ) {
-            tabTitles.forEachIndexed { index, title ->
-                Tab(
-                    selected = index == selectedItem,
-                    onClick = {
-                        when (index) {
-                            0 -> navigateToTab(
-                                navController = tabNavController,
-                                route = Route.LocateScreen.route
-                            )
-
-                            1 -> navigateToTab(
-                                navController = tabNavController,
-                                route = Route.ArchiveScreen.route
-                            )
-                        }
-                    },
-                    text = { Text(text = title) },
-                    unselectedContentColor = unselectedColor
-                )
-            }
-        }
+//        TabRow(
+//            selectedTabIndex = selectedItem
+//        ) {
+//            tabTitles.forEachIndexed { index, title ->
+//                Tab(
+//                    selected = index == selectedItem,
+//                    onClick = {
+//                        when (index) {
+//                            0 -> navigateToTab(
+//                                navController = tabNavController,
+//                                route = Route.LocateScreen.route
+//                            )
+//
+//                            1 -> navigateToTab(
+//                                navController = tabNavController,
+//                                route = Route.ArchiveScreen.route
+//                            )
+//                        }
+//                    },
+//                    text = { Text(text = title) },
+//                    unselectedContentColor = unselectedColor
+//                )
+//            }
+//        }
         TabNavGraph(tabNavController = tabNavController, homeNavController = navController)
     }
 }

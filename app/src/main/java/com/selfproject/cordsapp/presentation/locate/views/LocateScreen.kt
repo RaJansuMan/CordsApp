@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -55,6 +54,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.selfproject.cordsapp.R
+import com.selfproject.cordsapp.presentation.common.SectionHeader
+import com.selfproject.cordsapp.presentation.common.TextRow
 import com.selfproject.cordsapp.presentation.locate.LocateScreenEvents
 import com.selfproject.cordsapp.presentation.locate.LocateViewModel
 import com.selfproject.cordsapp.presentation.navigation.Route
@@ -138,7 +139,7 @@ fun LocateScreen(navController: NavController, viewModel: LocateViewModel) {
                                 modifier = Modifier.height(halfExpandedHeight - topHeight),
                                 viewModel = this@apply
                             )
-                            BottomCard(viewModel = this@apply)
+                            BottomCard(viewModel = this@apply, navController = navController)
                         }
                     }
                 }
@@ -263,7 +264,11 @@ fun TopHeaderCard(modifier: Modifier = Modifier, viewModel: LocateViewModel) {
 }
 
 @Composable
-fun BottomCard(modifier: Modifier = Modifier, viewModel: LocateViewModel? = null) {
+fun BottomCard(
+    modifier: Modifier = Modifier,
+    viewModel: LocateViewModel? = null,
+    navController: NavController? = null
+) {
     viewModel?.state?.clickedPoint.let { point ->
         Card(
             modifier = modifier
@@ -312,14 +317,20 @@ fun BottomCard(modifier: Modifier = Modifier, viewModel: LocateViewModel? = null
                         .padding(vertical = 8.dp), horizontalArrangement = Arrangement.SpaceAround
                 ) {
                     Button(
-                        onClick = { viewModel?.onEvent(LocateScreenEvents.OnDeletePoint) },
+                        onClick = {
+                            viewModel?.onEvent(LocateScreenEvents.OnDeletePoint)
+                        },
                         shape = RoundedCornerShape(8.dp),
                         colors = ButtonDefaults.buttonColors(containerColor = Color.Red)
                     ) {
                         Text(text = "DELETE POINT", style = TextStyle(fontWeight = FontWeight.Bold))
                     }
                     Button(
-                        onClick = { viewModel?.onEvent(LocateScreenEvents.OnPointDetails) },
+                        onClick = {
+                            viewModel?.state?.clickedPoint?.pointId?.let {
+                                navController?.navigate(Route.PointDetailsScreen.createRoute(it))
+                            }
+                        },
                         shape = RoundedCornerShape(8.dp) // Rounded corners
                     ) {
                         Text(
@@ -334,40 +345,6 @@ fun BottomCard(modifier: Modifier = Modifier, viewModel: LocateViewModel? = null
     }
 }
 
-
-@Composable
-private fun SectionHeader(modifier: Modifier = Modifier, value: String, spacer: Boolean = true) {
-    Column(modifier = modifier) {
-        if (spacer) {
-            Spacer(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(1.dp)
-                    .background(MaterialTheme.colorScheme.onSurfaceVariant)
-            )
-        }
-        Text(
-            modifier = Modifier.padding(start = 8.dp, top = 5.dp, bottom = 2.dp),
-            text = value,
-            style = TextStyle(
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.primary,
-                fontSize = 18.sp
-            )
-        )
-    }
-}
-
-@Composable
-fun TextRow(modifier: Modifier = Modifier, field: String, value: String) {
-    Row(
-        modifier = modifier.padding(start = 20.dp, top = 8.dp),
-        horizontalArrangement = Arrangement.spacedBy(20.dp)
-    ) {
-        Text(text = "$field ", color = MaterialTheme.colorScheme.onSurfaceVariant)
-        Text(text = value, color = MaterialTheme.colorScheme.onSurfaceVariant)
-    }
-}
 
 //@Preview(showBackground = true)
 //@Composable
