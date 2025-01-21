@@ -1,5 +1,8 @@
 package com.selfproject.cordsapp.data.remote
 
+import androidx.annotation.Keep
+
+@Keep
 data class ResponseCoordinates(
     val lat: Double,
     val lon: Double,
@@ -13,6 +16,7 @@ data class ResponseCoordinates(
 
 )
 
+@Keep
 data class ErrorResponse(
     val errorCode: Int,
     val errorMessage: String

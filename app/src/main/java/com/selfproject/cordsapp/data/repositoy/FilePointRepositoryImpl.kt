@@ -1,5 +1,6 @@
 package com.selfproject.cordsapp.data.repositoy
 
+import android.util.Log
 import com.selfproject.cordsapp.data.local.AppDatabase
 import com.selfproject.cordsapp.data.mapper.pointToPointQuery
 import com.selfproject.cordsapp.data.mapper.toApiResponse
@@ -38,17 +39,31 @@ class FilePointRepositoryImpl @Inject constructor(
         return flow {
             emit(Result.Loading())
             val response = try {
-                when (val result = api.getRemotePoint(point.toPointQuery()).toApiResponse()) {
+//                val moshi = Moshi.Builder().build()
+//                val type = Types.newParameterizedType(
+//                    Response::class.java,
+//                    ResponseCoordinates::class.java
+//                )
+//                val adapter = moshi.adapter<Response<ResponseCoordinates>>(type)
+
+                val query = point.toPointQuery()
+                Log.d("testtry", "here1")
+                val result = api.getRemotePoint(query)
+                Log.d("testtry", "here2")
+                val response = result.toApiResponse()
+                Log.d("testtry", "here3")
+                when (response) {
                     is ApiResponse.Error -> {
-                        emit(Result.Error(result.errorMessage))
+                        emit(Result.Error(response.errorMessage))
                         null
                     }
 
                     is ApiResponse.Success -> {
-                        result.data.toPointEntity(point)
+                        response.data.toPointEntity(point)
                     }
                 }
             } catch (e: Exception) {
+                Log.d("testtry", e.toString())
                 emit(Result.Error("Unable to connect to server"))
                 null
             }
