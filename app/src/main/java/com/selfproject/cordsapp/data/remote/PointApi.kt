@@ -10,7 +10,6 @@ interface PointApi {
 
 
     companion object {
-        //        const val API_KEY = "JI7KYLN2NQIKY7KG"
-        const val BASE_URL = "http://192.168.1.9:5000"
+        const val BASE_URL = "https://cordsappbackend.onrender.com"
     }
 }

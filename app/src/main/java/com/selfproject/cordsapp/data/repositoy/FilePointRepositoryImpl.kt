@@ -58,6 +58,9 @@ class FilePointRepositoryImpl @Inject constructor(
                 if (newPoint?.pointId == null) {
                     emit(Result.Error("Unable to save to repository"))
                 } else {
+                    if (!pointCache.containsKey(newPoint.layer.layerId)) {
+                        pointCache[newPoint.layer.layerId] = mutableMapOf()
+                    }
                     pointCache[newPoint.layer.layerId]!![newPoint.pointId] = newPoint
                     emit(Result.Success(data = newPoint))
                 }

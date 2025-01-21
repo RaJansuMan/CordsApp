@@ -84,7 +84,7 @@ fun PointDetails(navController: NavController, viewModel: PointDetailViewModel) 
                         modifier = Modifier.fillMaxWidth(),
                         field = "Zone :",
                         value = if (utmCoordinate != null) {
-                            "${utmCoordinate.zoneLetter}${utmCoordinate.zoneNumber}"
+                            "${utmCoordinate.zoneNumber}${utmCoordinate.zoneLetter}"
                         } else "_"
                     )
                     TextRow(
@@ -104,16 +104,16 @@ fun PointDetails(navController: NavController, viewModel: PointDetailViewModel) 
                         field = "Ellipsoidal :",
                         value = elevation.ellipsoidal.toString()
                     )
-                    TextRow(
-                        modifier = Modifier.fillMaxWidth(),
-                        field = "EGM08 :",
-                        value = elevation.egm08.toString()
-                    )
-                    TextRow(
-                        modifier = Modifier.fillMaxWidth(),
-                        field = "EGM96 :",
-                        value = elevation.egm96.toString()
-                    )
+//                    TextRow(
+//                        modifier = Modifier.fillMaxWidth(),
+//                        field = "EGM08 :",
+//                        value = elevation.egm08.toString()
+//                    )
+//                    TextRow(
+//                        modifier = Modifier.fillMaxWidth(),
+//                        field = "EGM96 :",
+//                        value = elevation.egm96.toString()
+//                    )
                 }
             }
         }
